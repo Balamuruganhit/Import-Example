@@ -221,16 +221,17 @@ under the License.
     <attribute type="List" mode="OUT" name="monthlyQuoteList" optional="true"/>
 </service>
 
-<service name="listYearlyOrders"
+<service name="ListYearlyOrderStats"
          engine="groovy"
          auth="true"
          export="true"
          action="GET"
-         location="component://example/src/main/groovy/org/apache/ofbiz/example/ListYearlyOrders.groovy"
-         invoke="listYearlyOrders">
-    <description>Fetch total orders for current and previous year</description>
-    <attribute type="List" mode="OUT" name="yearlyOrdersList" optional="true"/>
+         location="component://example/src/main/groovy/org/apache/ofbiz/example/ListYearlyOrderStats.groovy"
+         invoke="ListYearlyOrderStats">
+    <description>Fetch yearly counts of orders from OrderHeader based on createdStamp</description>
+    <attribute type="List" mode="OUT" name="yearlyOrderStats" optional="true"/>
 </service>
+
 
 <service name="ListProductionRunValues" 
          engine="groovy"  
@@ -330,6 +331,100 @@ under the License.
     invoke="ListRejectedWorkEfforts">
     <description>Fetch list of WorkEffort IDs having status REJECTED</description>
     <attribute type="List" mode="OUT" name="workEffortIds" optional="true"/>
+</service>
+<!-- ========================================================= -->
+<!-- List Production Runs - CREATED -->
+<!-- ========================================================= -->
+<service name="ListCreatedProductionRuns"
+         engine="groovy"
+         auth="true"
+         export="true"
+         action="GET"
+         location="component://example/src/main/groovy/org/apache/ofbiz/example/ListCreatedProductionRuns.groovy"
+         invoke="ListCreatedProductionRuns">
+    <description>Fetch list of WorkEffort IDs for Production Run with status PRUN_CREATED</description>
+    <attribute type="List" mode="OUT" name="workEffortIds" optional="true"/>
+</service>
+
+<!-- ========================================================= -->
+<!-- List Production Runs - CLOSED -->
+<!-- ========================================================= -->
+<service name="ListClosedProductionRuns"
+         engine="groovy"
+         auth="true"
+         export="true"
+         action="GET"
+         location="component://example/src/main/groovy/org/apache/ofbiz/example/ListProductionRunClosed.groovy"
+         invoke="ListProductionRunClosed">
+    <description>Fetch list of WorkEffort IDs for Production Run with status PRUN_CLOSED</description>
+    <attribute type="List" mode="OUT" name="workEffortIds" optional="true"/>
+</service>
+<!-- ========================================================= -->
+<!-- List Work Orders - CREATED -->
+<!-- ========================================================= -->
+<service name="ListWorkOrderCreated"
+         engine="groovy"
+         auth="true"
+         export="true"
+         action="GET"
+         location="component://example/src/main/groovy/org/apache/ofbiz/example/ListWorkOrderCreated.groovy"
+         invoke="ListWorkOrderCreated">
+    <description>Fetch list of WorkOrder IDs having status WO_CREATED</description>
+    <attribute type="List" mode="OUT" name="workOrderIds" optional="true"/>
+</service>
+
+<!-- ========================================================= -->
+<!-- List Work Orders - APPROVED -->
+<!-- ========================================================= -->
+<service name="ListWorkOrderApproved"
+         engine="groovy"
+         auth="true"
+         export="true"
+         action="GET"
+         location="component://example/src/main/groovy/org/apache/ofbiz/example/ListWorkOrderApproved.groovy"
+         invoke="ListWorkOrderApproved">
+    <description>Fetch list of WorkOrder IDs having status WO_APPROVED</description>
+    <attribute type="List" mode="OUT" name="workOrderIds" optional="true"/>
+</service>
+
+<!-- ========================================================= -->
+<!-- List Work Orders - COMPLETED -->
+<!-- ========================================================= -->
+<service name="ListWorkOrderCompleted"
+         engine="groovy"
+         auth="true"
+         export="true"
+         action="GET"
+         location="component://example/src/main/groovy/org/apache/ofbiz/example/ListWorkOrderCompleted.groovy"
+         invoke="ListWorkOrderCompleted">
+    <description>Fetch list of WorkOrder IDs having status WO_COMPLETED</description>
+    <attribute type="List" mode="OUT" name="workOrderIds" optional="true"/>
+</service>
+
+<!-- ========================================================= -->
+<!-- List ALL Work Orders -->
+<!-- ========================================================= -->
+<service name="ListTotalWorkOrders"
+         engine="groovy"
+         auth="true"
+         export="true"
+         action="GET"
+         location="component://example/src/main/groovy/org/apache/ofbiz/example/ListTotalWorkOrders.groovy"
+         invoke="ListTotalWorkOrders">
+    <description>Fetch list of all WorkOrder IDs</description>
+    <attribute type="List" mode="OUT" name="workOrderIds" optional="true"/>
+</service>
+
+
+<service name="ListQuantityProducedData"
+         engine="groovy"
+         auth="true"
+         export="true"
+         action="GET"
+         location="component://example/src/main/groovy/org/apache/ofbiz/example/WorkEffortStatsService.groovy"
+         invoke="listQuantityProducedData">
+    <description>Fetch quantityToProduce and quantityProduced from WorkEffort entity</description>
+    <attribute name="workEffortList" type="List" mode="OUT" optional="false"/>
 </service>
 
 </services>

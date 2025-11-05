@@ -54,7 +54,8 @@ const OrderAmountStats: React.FC = () => {
           amountData.map((item, idx) => (
             <div className="stat-column" key={idx}>
               <p className="stat-label">{item.label}</p>
-              <p className="stat-value">{item.value}</p>
+              {/* 💲 Add dollar sign here */}
+              <p className="stat-value">${item.value.toLocaleString()}</p>
             </div>
           ))
         ) : (

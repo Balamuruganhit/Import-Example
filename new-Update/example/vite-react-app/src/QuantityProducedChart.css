@@ -1,0 +1,107 @@
+/* Animated Card Container */
+.card-animated {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  padding: 30px 50px;
+  margin: 30px auto;
+  width: 95vw;              /* ✅ Responsive width: nearly full screen */
+  max-width: 1300px;        /* ✅ Looks great on wide monitors */
+  transition: all 0.4s ease;
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.card-animated:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+/* Chart Title */
+.chart-title {
+  text-align: center;
+  font-size: 1.9rem;
+  color: #2a4dff;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+/* Chart Subtitle */
+.chart-subtitle {
+  text-align: center;
+  color: #777;
+  margin-bottom: 25px;
+  font-size: 1rem;
+}
+
+/* Chart Container */
+.chart-container {
+  width: 100%;             /* ✅ Full width within card */
+  height: 420px;           /* ✅ Slightly taller for readability */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Loading and Error Text */
+.loading-text {
+  text-align: center;
+  color: #888;
+  font-size: 1rem;
+  margin-top: 20px;
+}
+
+.error-text {
+  text-align: center;
+  color: red;
+  font-size: 1.1rem;
+  margin-top: 20px;
+}
+
+/* Fade In Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1280px) {
+  .card-animated {
+    width: 95%;
+    padding: 25px;
+  }
+
+  .chart-container {
+    height: 380px;
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-title {
+    font-size: 1.5rem;
+  }
+
+  .card-animated {
+    padding: 20px;
+    width: 90%;
+  }
+
+  .chart-container {
+    height: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-title {
+    font-size: 1.3rem;
+  }
+
+  .chart-container {
+    height: 300px;
+  }
+}

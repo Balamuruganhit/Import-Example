@@ -7,6 +7,8 @@ import Preloader from "./Preloader";
 import Greeting from "./Greeting";
 import QuoteItemAmounts from "./QuoteItemAmountStats";
 import OrderAmountStats from "./OrderAmountStats";
+import QuantityProducedChart from "./QuantityProducedChart";
+
 
 import {
   Chart as ChartJS,
@@ -26,6 +28,42 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarEle
 
 function App() {
   const reworkRejectedChartRef = useRef<any>(null);
+const productionRunChartRef = useRef<any>(null);
+const handleWorkOrderPieClick = async (event: any) => {
+  const chart = workOrderChartRef.current;
+  if (!chart) return;
+
+  const elements = chart.getElementsAtEventForMode(event, "nearest", { intersect: true }, true);
+  if (!elements.length) return;
+
+  const element = elements[0];
+  const label = chart.data.labels[element.index]; // "Created", "Approved", "Completed", "Total"
+
+  const serviceName =
+    label === "Created"
+      ? "ListWorkOrderCreated"
+      : label === "Approved"
+      ? "ListWorkOrderApproved"
+      : label === "Completed"
+      ? "ListWorkOrderCompleted"
+      : "ListTotalWorkOrders";
+
+  try {
+    const result = await pipe(apiGet(`/services/${serviceName}`))();
+    if (E.isRight(result)) {
+      const json = await result.right.json();
+      const ids = json?.data?.workOrderIds ?? json?.workOrderIds ?? [];
+
+      setWorkEffortIds(ids);
+      setPopupTitle(`${label} WorkOrder IDs`);
+      setShowPopup(true);
+    } else {
+      console.error("API Error:", result.left.message);
+    }
+  } catch (err) {
+    console.error("Error fetching WorkOrder IDs:", err);
+  }
+};
 
   const { get: apiGet } = useApi();
  const [loading, setLoading] = useState(true);
@@ -35,7 +73,14 @@ function App() {
   const [quoteData, setQuoteData] = useState<any[]>([]);
   const [requestData, setRequestData] = useState<any[]>([]);
   const [yearlyOrders, setYearlyOrders] = useState<any[]>([]);
+const getYearlyColors = (data: any[]) => {
+  if (data.length < 2) return ["#135d7bff", "#135d7bff"]; // default if less than 2 years
 
+  const [prevYear, currYear] = data;
+  return currYear.value > prevYear.value
+    ? ["#801313ff", "#00C49F"]
+    : ["#00C49F", "#801313ff"]; 
+};
   const [salesStats, setSalesStats] = useState({ complete: 0, onProcess: 0 });
   const [purchaseStats, setPurchaseStats] = useState({ complete: 0, onProcess: 0 });
   const [quoteStats, setQuoteStats] = useState({ created: 0, ordered: 0 });
@@ -87,6 +132,50 @@ const [showPopup, setShowPopup] = useState(false);
 const [popupTitle, setPopupTitle] = useState("");
 const [workEffortIds, setWorkEffortIds] = useState<string[]>([]);
 
+
+
+// --- Handle Production Run Pie Slice Click ---
+const handleProductionSliceClick = async (event: any) => {
+  const chart = productionRunChartRef.current;
+  if (!chart) return;
+
+  const elements = chart.getElementsAtEventForMode(
+    event,
+    "nearest",
+    { intersect: true },
+    true
+  );
+
+  if (!elements.length) return;
+
+  const element = elements[0];
+  const label = chart.data.labels[element.index];
+  const serviceName =
+    label === "Created Productions"
+      ? "ListCreatedProductionRuns"
+      : "ListClosedProductionRuns";
+
+  try {
+    const result = await pipe(apiGet(`/services/${serviceName}`))();
+    if (E.isRight(result)) {
+      const json = await result.right.json();
+      const ids =
+        json?.data?.workEffortIds ??
+        json?.workEffortIds ??
+        [];
+
+      setWorkEffortIds(ids);
+      setPopupTitle(`${label} WorkEffort IDs`);
+      setShowPopup(true);
+    } else {
+      console.error("API Error:", result.left.message);
+    }
+  } catch (err) {
+    console.error("Error fetching Production Run IDs:", err);
+  }
+};
+
+// --- Handle Pie Slice Click ---
 const handlePieSliceClick = async (event: any) => {
   const chart = reworkRejectedChartRef.current;
   if (!chart) return;
@@ -260,12 +349,12 @@ useEffect(() => {
       const salesData = await callService("/services/ListMonthlySalesOrders");
       const purchaseData = await callService("/services/ListMonthlyPurchaseOrders");
       const quoteData = await callService("/services/ListMonthlyQuotes");
-      const yearlyData = await callService("/services/listYearlyOrders");
+      const yearlyData = await callService("/services/ListYearlyOrderStats");
 
       setMonthlySales(salesData?.monthlySalesList || []);
       setMonthlyPurchases(purchaseData?.monthlyPurchaseList || []);
       setMonthlyQuotes(quoteData?.monthlyQuoteList || []);
-      setYearlyOrders(yearlyData?.yearlyOrdersList || []);
+      setYearlyOrders(yearlyData?.yearlyOrderStats || []);
     } catch (err: any) {
       console.error(err);
       setErrorMonthly(err.message || "Error fetching data");
@@ -559,22 +648,43 @@ useEffect(() => {
       {/* --- Production & Work Order Pie Charts --- */}
       <div className="charts-row">
         <div className="chart-card">
-          <h2>Production Run Summary</h2>
-          {productionRunData.length > 0 ? (
-            <div className="fixed-chart">
-              <Pie ref={productionChartRef} data={createPieChartData(productionRunData)} options={{ maintainAspectRatio: false, animation: { duration: 1000 } }} />
-            </div>
-          ) : (
-            <div className="Preloader">Loading production runs...</div>
-          )}
-        </div>
-
+  <h2>Production Run Summary</h2>
+  {productionRunData.length > 0 ? (
+    <div className="fixed-chart">
+      <Pie
+        ref={productionRunChartRef}
+        data={createPieChartData(productionRunData)}
+        options={{
+          maintainAspectRatio: false,
+          animation: { duration: 1000 },
+          cutout: "60%",
+          plugins: {
+            legend: { position: "top" },
+            title: { display: true, text: "Production Run Status" },
+          },
+          onClick: handleProductionSliceClick, // ✅ added handler
+        }}
+      />
+    </div>
+  ) : (
+    <div className="Preloader">Loading production runs...</div>
+  )}
+</div>
         <div className="chart-card">
           <h2>Work Order Summary</h2>
           {workOrderData.length > 0 ? (
             <div className="fixed-chart">
-              <Pie ref={workOrderChartRef} data={createPieChartData(workOrderData)} options={{ maintainAspectRatio: false, animation: { duration: 1000 } }} />
-            </div>
+           <Pie
+  ref={workOrderChartRef}
+  data={createPieChartData(workOrderData)}
+  options={{
+    maintainAspectRatio: false,
+    animation: { duration: 1000 },
+    plugins: { legend: { position: "top" } },
+    onClick: handleWorkOrderPieClick,
+  }}
+/>
+          </div>
           ) : (
             <div className="Preloader">Loading work orders...</div>
           )}
@@ -608,7 +718,10 @@ useEffect(() => {
 </div>
 
       </div>
-
+{/* --- Quantity Produced Chart --- */}
+<div className="charts-row">
+  <QuantityProducedChart />
+</div>
       {/* --- Monthly Charts --- */}
       {loadingMonthly ? (
         <p>Loading charts...</p>
@@ -636,24 +749,7 @@ useEffect(() => {
               </div>
             ))}
           </div>
-
-          {/* Yearly Orders Comparison */}
-          <div className="charts-row">
-            <div className="chart-card" style={{ width: "100%", maxWidth: "1300px" }}>
-              <h2>Yearly Orders Comparison</h2>
-              <div className="chart-container" style={{ width: "100%", height: "400px" }}>
-                <Bar
-                  ref={yearlyOrdersRef}
-                  data={createBarChartData(yearlyOrders, "Yearly Orders", "#00a86b")}
-                  options={{ ...createBarChartOptions(yearlyOrders, "Yearly Orders Comparison"), maintainAspectRatio: false }}
-                />
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* --- Monthly Production & Work Order Bar Charts --- */}
+  {/* --- Monthly Production & Work Order Bar Charts --- */}
       {loadingMonthlyExtra ? (
         <p>Loading monthly production & work order charts...</p>
       ) : errorMonthlyExtra ? (
@@ -664,7 +760,7 @@ useEffect(() => {
             { title: "Monthly Production Stats", data: monthlyProductionStats, color: "#6b7622ff", label: "Productions" },
             { title: "Monthly Work Order Stats", data: monthlyWorkOrderStats, color: "#89614bff", label: "Work Orders" },
           ].map((chart, idx) => (
-            <div className="chart-card" key={idx} style={{ width: "100%", maxWidth: "1100px" }}>
+            <div className="chart-card" key={idx} style={{ width: "95%", maxWidth: "1100px" }}>
               <h2>{chart.title}</h2>
               <div className="chart-container" style={{ width: "100%", height: "400px" }}>
                 <Bar
@@ -677,20 +773,51 @@ useEffect(() => {
           ))}
         </div>
       )}
+          {/* Yearly Orders Comparison */}
+      <div className="charts-row">
+  <div className="chart-card" style={{ width: "100%", maxWidth: "1300px" }}>
+    <h2>Yearly Orders Comparison</h2>
+    <div className="chart-container" style={{ width: "100%", height: "400px" }}>
+      <Bar
+        ref={yearlyOrdersRef}
+        data={{
+          labels: yearlyOrders.map((y) => y.label),
+          datasets: [
+            {
+              label: "Yearly Orders",
+              data: yearlyOrders.map((y) => y.value),
+              backgroundColor: getYearlyColors(yearlyOrders), // Dynamic colors: current vs previous
+            },
+          ],
+        }}
+        options={{
+          ...createBarChartOptions(yearlyOrders, "Yearly Orders Comparison"),
+          maintainAspectRatio: false,
+        }}
+      />
+    </div>
+  </div>
+</div>
+        </>
+      )}
       {/* --- Popup Modal for WorkEffort IDs --- */}
 {showPopup && (
   <div className="popup-overlay" onClick={() => setShowPopup(false)}>
     <div className="popup-content" onClick={(e) => e.stopPropagation()}>
       <h3>{popupTitle}</h3>
-      {workEffortIds.length > 0 ? (
-        <ul>
-          {workEffortIds.map((id, idx) => (
-            <li key={idx}>{id}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No WorkEfforts found.</p>
-      )}
+
+      <div className="popup-inner-scroll">
+        {workEffortIds.length > 0 ? (
+          <ul>
+            {workEffortIds.map((id, idx) => (
+              <li key={idx}>{id}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>No WorkEfforts found.</p>
+        )}
+      </div>
+
       <button onClick={() => setShowPopup(false)}>Close</button>
     </div>
   </div>
