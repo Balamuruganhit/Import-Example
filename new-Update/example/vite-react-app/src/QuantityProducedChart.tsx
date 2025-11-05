@@ -22,45 +22,87 @@ interface QuantityData {
 
 const QuantityProducedChart: React.FC = () => {
   const { get: apiGet } = useApi();
+
   const [data, setData] = useState<QuantityData[]>([]);
+  const [filteredData, setFilteredData] = useState<QuantityData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [jumpPage, setJumpPage] = useState(""); // input starts empty
+  const [searchTerm, setSearchTerm] = useState(""); // search input
+  const pageButtonLimit = 5;
 
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const result = await pipe(apiGet("/services/ListQuantityProducedData"))();
+      const result = await pipe(
+        apiGet(
+          `/services/ListQuantityProducedData?page=${currentPage}&itemsPerPage=${itemsPerPage}`
+        )
+      )();
+
       if (E.isLeft(result)) throw new Error(result.left.message);
 
       const json = await result.right.json();
-      console.log("✅ Raw Data:", json);
 
       const list = json?.data?.workEffortList ?? json?.workEffortList ?? [];
+      const total = json?.data?.totalRecords ?? json?.totalRecords ?? list.length;
 
-const mapped = list
-  .map((item: any) => ({
-    name: item.workEffortId,
-    quantityToProduce: parseFloat(item.quantityToProduce || 0),
-    quantityProduced: parseFloat(item.quantityProduced || 0),
-  }))
-  .filter((d: QuantityData) => d.quantityToProduce > 0 || d.quantityProduced > 0);
+      const mapped = list
+        .map((item: any) => ({
+          name: item.workEffortId,
+          quantityToProduce: parseFloat(item.quantityToProduce || 0),
+          quantityProduced: parseFloat(item.quantityProduced || 0),
+        }))
+        .filter((d: QuantityData) => d.quantityToProduce > 0 || d.quantityProduced > 0);
 
-
-      console.log("✅ Cleaned Data:", mapped);
       setData(mapped);
+      setFilteredData(mapped); // initially no filter
+      setTotalRecords(total);
     } catch (err: any) {
-      console.error("❌ Error fetching data:", err);
       setError(err.message || "Error fetching quantity data");
     } finally {
       setLoading(false);
     }
-  }, [apiGet]);
+  }, [apiGet, currentPage, itemsPerPage]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // --- Filter data by search term
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setFilteredData(data);
+    } else {
+      const lower = searchTerm.toLowerCase();
+      setFilteredData(
+        data.filter((d) => d.name.toLowerCase().includes(lower))
+      );
+    }
+    setCurrentPage(1); // reset to first page when search changes
+  }, [searchTerm, data]);
+
+  // --- Pagination calculations
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const startPage =
+    Math.floor((currentPage - 1) / pageButtonLimit) * pageButtonLimit + 1;
+  const endPage = Math.min(startPage + pageButtonLimit - 1, totalPages);
+  const visiblePages = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, i) => startPage + i
+  );
+
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   if (loading) return <div className="loading-text">Loading Quantity Data...</div>;
   if (error) return <div className="error-text">{error}</div>;
@@ -72,10 +114,41 @@ const mapped = list
         WorkEffort: Quantity To Produce vs Quantity Produced
       </p>
 
+      {/* --- Top controls: items per page + search */}
+      <div style={{ marginBottom: "10px", display: "flex", justifyContent: "space-between" }}>
+        <label>
+          Items per page:{" "}
+          <select
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+          >
+            {[5, 10, 20, 50, 80].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          Search:{" "}
+          <input
+            type="text"
+            value={searchTerm}
+            placeholder="Enter WorkEffort ID"
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ width: "150px" }}
+          />
+        </label>
+      </div>
+
       <div className="chart-container">
         <ResponsiveContainer width="100%" height={350}>
           <BarChart
-            data={data}
+            data={paginatedData}
             margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
@@ -87,13 +160,8 @@ const mapped = list
               height={80}
               tick={{ fontSize: 12, fill: "#444" }}
             />
-            <YAxis
-              tick={{ fontSize: 12, fill: "#333" }}
-              domain={[0, "dataMax + 5"]}
-            />
-            <Tooltip
-              contentStyle={{ backgroundColor: "#f4f8ff", borderRadius: 10 }}
-            />
+            <YAxis tick={{ fontSize: 12, fill: "#333" }} domain={[0, "dataMax + 5"]} />
+            <Tooltip contentStyle={{ backgroundColor: "#f4f8ff", borderRadius: 10 }} />
             <Legend />
             <Bar
               dataKey="quantityToProduce"
@@ -109,6 +177,63 @@ const mapped = list
             />
           </BarChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="pagination-controls">
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => prev - 1)}
+        >
+          Previous
+        </button>
+
+        {visiblePages.map((num) => (
+          <button
+            key={num}
+            className={num === currentPage ? "active-page" : ""}
+            onClick={() => setCurrentPage(num)}
+          >
+            {num}
+          </button>
+        ))}
+
+        {endPage < totalPages && <span>…</span>}
+
+        <button
+          disabled={currentPage === totalPages || totalPages === 0}
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+        >
+          Next
+        </button>
+
+        {/* Page X of N */}
+        <span style={{ marginLeft: "10px", fontWeight: "bold" }}>
+          Page {currentPage} of {totalPages}
+        </span>
+
+        {/* Jump to page input */}
+        <span style={{ marginLeft: "10px" }}>
+          Go to page:{" "}
+          <input
+            type="number"
+            min={1}
+            max={totalPages}
+            placeholder="Enter page"
+            value={jumpPage}
+            onChange={(e) => setJumpPage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const page = Number(jumpPage);
+                if (page >= 1 && page <= totalPages) {
+                  setCurrentPage(page);
+                  setJumpPage("");
+                }
+              }
+            }}
+            style={{ width: "80px" }}
+          />
+        </span>
       </div>
     </div>
   );

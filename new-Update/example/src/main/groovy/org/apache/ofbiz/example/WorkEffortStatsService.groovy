@@ -9,10 +9,11 @@ def listQuantityProducedData(Map context) {
     def delegator = context?.delegator ?: DelegatorFactory.getDelegator("default")
 
     try {
-        // ✅ Condition: Only include work efforts of type PROD_ORDER_TASK
-        def condition = EntityCondition.makeCondition(
-            "workEffortTypeId", EntityOperator.EQUALS, "PROD_ORDER_TASK"
-        )
+        // ✅ Condition: Only include work efforts of type PROD_ORDER_TASK AND status PRUN_CLOSED
+        def condition = EntityCondition.makeCondition([
+            EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "PROD_ORDER_TASK"),
+            EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_CLOSED")
+        ], EntityOperator.AND)
 
         // ✅ Fetch required fields
         def workEfforts = delegator.findList(
