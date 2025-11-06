@@ -4,26 +4,27 @@ import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.service.ServiceUtil
 import org.apache.ofbiz.base.util.Debug
 
-def ListReworkWorkEfforts() {
+def ListReworkWorkEfforts(Map context) {
     def result = ServiceUtil.returnSuccess()
-    def delegator = dctx.getDelegator()
+    def delegator = context?.delegator ?: DelegatorFactory.getDelegator("default")
 
     try {
-        // condition: rework field > 0 (and not null)
+        // --- Condition: rework field > 0 and not null ---
         def condition = EntityCondition.makeCondition([
             EntityCondition.makeCondition("rework", EntityOperator.NOT_EQUAL, null),
             EntityCondition.makeCondition("rework", EntityOperator.GREATER_THAN, BigDecimal.ZERO)
         ], EntityOperator.AND)
 
+        // --- Fetch matching WorkEfforts ---
         def workEfforts = delegator.findList("WorkEffort", condition, null, null, null, false)
         def workEffortIds = workEfforts.collect { it.workEffortId }
 
         result.workEffortIds = workEffortIds
-        Debug.logInfo("Rework WorkEfforts found: ${workEffortIds}", "ListReworkWorkEfforts")
-    } catch (Exception e) {
-        Debug.logError(e, "Error fetching rework WorkEfforts", "ListReworkWorkEfforts")
-        return ServiceUtil.returnError("Error fetching rework WorkEfforts: ${e.message}")
-    }
+        Debug.logInfo("✅ Rework WorkEfforts found: ${workEffortIds}", "ListReworkWorkEfforts")
+        return result
 
-    return result
+    } catch (Exception e) {
+        Debug.logError(e, "❌ Error fetching Rework WorkEfforts", "ListReworkWorkEfforts")
+        return ServiceUtil.returnError("Error fetching Rework WorkEfforts: ${e.message}")
+    }
 }

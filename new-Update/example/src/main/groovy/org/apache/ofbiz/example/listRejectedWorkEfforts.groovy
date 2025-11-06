@@ -4,26 +4,27 @@ import org.apache.ofbiz.entity.condition.EntityOperator
 import org.apache.ofbiz.service.ServiceUtil
 import org.apache.ofbiz.base.util.Debug
 
-def ListRejectedWorkEfforts() {
+def ListRejectedWorkEfforts(Map context) {
     def result = ServiceUtil.returnSuccess()
-    def delegator = dctx.getDelegator()
+    def delegator = context?.delegator ?: DelegatorFactory.getDelegator("default")
 
     try {
-        // condition: quantityRejected field > 0 (and not null)
+        // --- Condition: quantityRejected field > 0 and not null ---
         def condition = EntityCondition.makeCondition([
             EntityCondition.makeCondition("quantityRejected", EntityOperator.NOT_EQUAL, null),
             EntityCondition.makeCondition("quantityRejected", EntityOperator.GREATER_THAN, BigDecimal.ZERO)
         ], EntityOperator.AND)
 
+        // --- Fetch matching WorkEfforts ---
         def workEfforts = delegator.findList("WorkEffort", condition, null, null, null, false)
         def workEffortIds = workEfforts.collect { it.workEffortId }
 
         result.workEffortIds = workEffortIds
-        Debug.logInfo("Rejected WorkEfforts found: ${workEffortIds}", "ListRejectedWorkEfforts")
-    } catch (Exception e) {
-        Debug.logError(e, "Error fetching rejected WorkEfforts", "ListRejectedWorkEfforts")
-        return ServiceUtil.returnError("Error fetching rejected WorkEfforts: ${e.message}")
-    }
+        Debug.logInfo("✅ Rejected WorkEfforts found: ${workEffortIds}", "ListRejectedWorkEfforts")
+        return result
 
-    return result
+    } catch (Exception e) {
+        Debug.logError(e, "❌ Error fetching Rejected WorkEfforts", "ListRejectedWorkEfforts")
+        return ServiceUtil.returnError("Error fetching Rejected WorkEfforts: ${e.message}")
+    }
 }

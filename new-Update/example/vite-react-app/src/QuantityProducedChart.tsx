@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useApi } from "./ApiContext";
 import { pipe } from "fp-ts/lib/function";
 import * as E from "fp-ts/lib/Either";
@@ -25,17 +25,25 @@ const QuantityProducedChart: React.FC = () => {
 
   const [data, setData] = useState<QuantityData[]>([]);
   const [filteredData, setFilteredData] = useState<QuantityData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Pagination state
+  // Pagination + control state
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [totalRecords, setTotalRecords] = useState(0);
-  const [jumpPage, setJumpPage] = useState(""); // input starts empty
-  const [searchTerm, setSearchTerm] = useState(""); // search input
+  const [jumpPage, setJumpPage] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
   const pageButtonLimit = 5;
 
+  // Debounce search for smoother typing
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm), 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Fetch Data (optimized for real-time updates)
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
@@ -48,63 +56,63 @@ const QuantityProducedChart: React.FC = () => {
       )();
 
       if (E.isLeft(result)) throw new Error(result.left.message);
-
       const json = await result.right.json();
 
       const list = json?.data?.workEffortList ?? json?.workEffortList ?? [];
-      const total = json?.data?.totalRecords ?? json?.totalRecords ?? list.length;
-
-      const mapped = list
-        .map((item: any) => ({
-          name: item.workEffortId,
-          quantityToProduce: parseFloat(item.quantityToProduce || 0),
-          quantityProduced: parseFloat(item.quantityProduced || 0),
-        }))
-        .filter((d: QuantityData) => d.quantityToProduce > 0 || d.quantityProduced > 0);
+      const mapped = list.map((item: any, index: number) => ({
+        name: item.workEffortId || `WE-${index + 1}`,
+        quantityToProduce: parseFloat(item.quantityToProduce || 0),
+        quantityProduced: parseFloat(item.quantityProduced || 0),
+      }));
 
       setData(mapped);
-      setFilteredData(mapped); // initially no filter
-      setTotalRecords(total);
+      setFilteredData(mapped);
     } catch (err: any) {
-      setError(err.message || "Error fetching quantity data");
+      setError(err.message || "Error fetching data");
     } finally {
       setLoading(false);
     }
   }, [apiGet, currentPage, itemsPerPage]);
 
+  // Fetch on page or size change
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  // --- Filter data by search term
+  // Filter data by search term (debounced)
   useEffect(() => {
-    if (searchTerm.trim() === "") {
+    if (debouncedSearch.trim() === "") {
       setFilteredData(data);
     } else {
-      const lower = searchTerm.toLowerCase();
-      setFilteredData(
-        data.filter((d) => d.name.toLowerCase().includes(lower))
-      );
+      const lower = debouncedSearch.toLowerCase();
+      setFilteredData(data.filter((d) => d.name.toLowerCase().includes(lower)));
     }
-    setCurrentPage(1); // reset to first page when search changes
-  }, [searchTerm, data]);
+    setCurrentPage(1);
+  }, [debouncedSearch, data]);
 
-  // --- Pagination calculations
+  // Pagination logic
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startPage =
     Math.floor((currentPage - 1) / pageButtonLimit) * pageButtonLimit + 1;
   const endPage = Math.min(startPage + pageButtonLimit - 1, totalPages);
-  const visiblePages = Array.from(
-    { length: endPage - startPage + 1 },
-    (_, i) => startPage + i
+  const visiblePages = useMemo(
+    () =>
+      Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i),
+    [startPage, endPage]
   );
 
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+  const paginatedData = useMemo(
+    () =>
+      filteredData.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      ),
+    [filteredData, currentPage, itemsPerPage]
   );
 
-  if (loading) return <div className="loading-text">Loading Quantity Data...</div>;
+  // --- UI Rendering
+  if (loading)
+    return <div className="loading-text">Loading Quantity Data...</div>;
   if (error) return <div className="error-text">{error}</div>;
 
   return (
@@ -114,8 +122,15 @@ const QuantityProducedChart: React.FC = () => {
         WorkEffort: Quantity To Produce vs Quantity Produced
       </p>
 
-      {/* --- Top controls: items per page + search */}
-      <div style={{ marginBottom: "10px", display: "flex", justifyContent: "space-between" }}>
+      {/* Top controls: items per page + search */}
+      <div
+        style={{
+          marginBottom: "10px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <label>
           Items per page:{" "}
           <select
@@ -125,7 +140,7 @@ const QuantityProducedChart: React.FC = () => {
               setCurrentPage(1);
             }}
           >
-            {[5, 10, 20, 50, 80].map((n) => (
+            {[5, 10, 20, 50, 100].map((n) => (
               <option key={n} value={n}>
                 {n}
               </option>
@@ -140,11 +155,17 @@ const QuantityProducedChart: React.FC = () => {
             value={searchTerm}
             placeholder="Enter WorkEffort ID"
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ width: "150px" }}
+            style={{
+              width: "180px",
+              padding: "4px 8px",
+              borderRadius: "6px",
+              border: "1px solid #ccc",
+            }}
           />
         </label>
       </div>
 
+      {/* Chart */}
       <div className="chart-container">
         <ResponsiveContainer width="100%" height={350}>
           <BarChart
@@ -160,20 +181,25 @@ const QuantityProducedChart: React.FC = () => {
               height={80}
               tick={{ fontSize: 12, fill: "#444" }}
             />
-            <YAxis tick={{ fontSize: 12, fill: "#333" }} domain={[0, "dataMax + 5"]} />
-            <Tooltip contentStyle={{ backgroundColor: "#f4f8ff", borderRadius: 10 }} />
+            <YAxis tick={{ fontSize: 12, fill: "#333" }} />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#f4f8ff",
+                borderRadius: 10,
+              }}
+            />
             <Legend />
             <Bar
               dataKey="quantityToProduce"
               fill="#33b5e5"
               name="Quantity To Produce"
-              animationDuration={1000}
+              animationDuration={800}
             />
             <Bar
               dataKey="quantityProduced"
               fill="#055e7eff"
               name="Quantity Produced"
-              animationDuration={1000}
+              animationDuration={800}
             />
           </BarChart>
         </ResponsiveContainer>
@@ -207,12 +233,10 @@ const QuantityProducedChart: React.FC = () => {
           Next
         </button>
 
-        {/* Page X of N */}
         <span style={{ marginLeft: "10px", fontWeight: "bold" }}>
           Page {currentPage} of {totalPages}
         </span>
 
-        {/* Jump to page input */}
         <span style={{ marginLeft: "10px" }}>
           Go to page:{" "}
           <input
@@ -231,7 +255,7 @@ const QuantityProducedChart: React.FC = () => {
                 }
               }
             }}
-            style={{ width: "80px" }}
+            style={{ width: "80px", marginLeft: "5px" }}
           />
         </span>
       </div>

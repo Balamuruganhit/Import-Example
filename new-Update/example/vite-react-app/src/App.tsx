@@ -131,8 +131,15 @@ const getYearlyColors = (data: any[]) => {
 const [showPopup, setShowPopup] = useState(false);
 const [popupTitle, setPopupTitle] = useState("");
 const [workEffortIds, setWorkEffortIds] = useState<string[]>([]);
+// --- Section Refs for smooth scrolling ---
+const overallStatsRef = useRef<HTMLDivElement>(null);
+const pieChartsRef = useRef<HTMLDivElement>(null);
+const monthlyChartsRef = useRef<HTMLDivElement>(null);
+const yearlyChartsRef = useRef<HTMLDivElement>(null);
 
-
+const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
+  ref.current?.scrollIntoView({ behavior: "smooth" });
+};
 
 // --- Handle Production Run Pie Slice Click ---
 const handleProductionSliceClick = async (event: any) => {
@@ -537,11 +544,19 @@ useEffect(() => {
   }
   return (
      <div className={`App ${fadeIn ? "fade-in" : ""}`}>
+      {/* --- Top Navigation Bar --- */}
+<div className="topbar">
+  <button onClick={() => scrollToSection(overallStatsRef)}>Overall Stats</button>
+  <button onClick={() => scrollToSection(pieChartsRef)}>Pie Charts</button>
+  <button onClick={() => scrollToSection(monthlyChartsRef)}>Monthly Charts</button>
+  <button onClick={() => scrollToSection(yearlyChartsRef)}>Yearly Charts</button>
+</div>
         {/* --- Greeting --- */}
     <div className="dashboard-greeting">
       <Greeting />
     </div>
 {/* --- Combined Stats Section --- */}
+<div ref={overallStatsRef} className="stats-row">
 <div className="stats-row">
   {/* --- Top Stat Boxes --- */}
   {[{
@@ -613,9 +628,9 @@ useEffect(() => {
     <QuoteItemAmounts />
   </div>
 </div>
-
+</div>
       {/* --- Pie Charts --- */}
-      <div className="charts-row">
+      <div className="charts-row" ref={pieChartsRef}>
         {[{ title: "Order Counts", data: orderData },
           { title: "Quote Counts", data: quoteData },
           { title: "Request Counts", data: requestData }].map((chart, idx) => (
@@ -729,7 +744,7 @@ useEffect(() => {
         <p style={{ color: "red" }}>{errorMonthly}</p>
       ) : (
         <>
-          <div className="charts-row">
+          <div className="charts-row" ref={monthlyChartsRef}>
             {[
               { title: "Monthly Sales Orders", data: monthlySales, color: "#d28405ff", label: "Sales Orders" },
               { title: "Monthly Purchase Orders", data: monthlyPurchases, color: "#bc1389ff", label: "Purchase Orders" },
@@ -774,7 +789,7 @@ useEffect(() => {
         </div>
       )}
           {/* Yearly Orders Comparison */}
-      <div className="charts-row">
+      <div className="charts-row" ref={yearlyChartsRef}>
   <div className="chart-card" style={{ width: "100%", maxWidth: "1300px" }}>
     <h2>Yearly Orders Comparison</h2>
     <div className="chart-container" style={{ width: "100%", height: "400px" }}>
@@ -805,18 +820,23 @@ useEffect(() => {
   <div className="popup-overlay" onClick={() => setShowPopup(false)}>
     <div className="popup-content" onClick={(e) => e.stopPropagation()}>
       <h3>{popupTitle}</h3>
+<div className="popup-inner-scroll" style={{ marginTop: "10px" }}>
+  {workEffortIds.length > 0 ? (
+    <ul>
+      {workEffortIds.slice(0, 300).map((id, idx) => (
+        <li key={idx}>{id}</li>
+      ))}
+    </ul>
+  ) : (
+    <p>No WorkEfforts found.</p>
+  )}
 
-      <div className="popup-inner-scroll">
-        {workEffortIds.length > 0 ? (
-          <ul>
-            {workEffortIds.map((id, idx) => (
-              <li key={idx}>{id}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>No WorkEfforts found.</p>
-        )}
-      </div>
+  {workEffortIds.length > 300 && (
+    <p style={{ color: "gray", marginTop: "10px", fontSize: "13px" }}>
+      Showing first 300 items only. Please refine your search.
+    </p>
+  )}
+</div>
 
       <button onClick={() => setShowPopup(false)}>Close</button>
     </div>
