@@ -1,10 +1,10 @@
 import org.apache.ofbiz.base.util.Debug
-import org.apache.ofbiz.entity.Delegator
+import org.apache.ofbiz.entity.DelegatorFactory
 import org.apache.ofbiz.service.ServiceUtil
 import java.math.BigDecimal
 
 def ListQuoteItemAmounts() {
-    Delegator delegator = dctx.getDelegator()
+    def delegator = dctx?.getDelegator() ?: DelegatorFactory.getDelegator("default")
 
     try {
         // Fetch all QuoteItems
@@ -17,7 +17,9 @@ def ListQuoteItemAmounts() {
             unitPrice * quantity
         } ?: BigDecimal.ZERO
 
-        return [success: true, totalQuoteAmount: totalAmount]
+        def result = ServiceUtil.returnSuccess()
+        result.totalQuoteAmount = totalAmount
+        return result
 
     } catch (Exception e) {
         Debug.logError(e, "Error fetching quote item amounts", "ListQuoteItemAmounts")

@@ -1,0 +1,95 @@
+/* Topbar */
+.topbar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap; /* responsive */
+  transition: all 0.4s ease; /* smooth layout changes */
+}
+
+.topbar-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  background: #817b86;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease; /* hover & active */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.topbar-btn:hover {
+  background: #d0d0d0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.topbar-btn.active {
+  background: #135d7bff;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transform: translateY(-1px);
+}
+
+.topbar-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(19,93,123,0.4);
+}
+
+/* Charts Row */
+.charts-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  justify-items: center;
+  align-items: stretch;
+ /* transition: all 0.5s ease; /* smooth rearrangement when layout changes */
+}
+
+/* Chart Card */
+.chart-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+  transition: all 0.4s ease; /* smooth hover + rearrange */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 1;
+}
+
+/* Hover effect */
+.chart-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+/* Chart container */
+.chart-container {
+  width: 100%;
+  height: 380px;
+  position: relative;
+ /* transition: all 0.5s ease; /* smooth resizing */
+}
+
+/* Fade-in for new charts (tab switch) */
+.fade-in {
+  animation: fadeInUp 0.5s ease-in-out;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+  .charts-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .chart-card { max-width: 90%; }
+}

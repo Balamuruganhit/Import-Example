@@ -117,9 +117,9 @@ const QuantityProducedChart: React.FC = () => {
 
   return (
     <div className="card-animated">
-      <h2 className="chart-title">Quantity Produced Overview</h2>
+      <h2 className="chart-title">Planned Vs Actual Production</h2>
       <p className="chart-subtitle">
-        WorkEffort: Quantity To Produce vs Quantity Produced
+        Displays the planned vs actual production quantities
       </p>
 
       {/* Top controls: items per page + search */}
@@ -192,13 +192,13 @@ const QuantityProducedChart: React.FC = () => {
             <Bar
               dataKey="quantityToProduce"
               fill="#33b5e5"
-              name="Quantity To Produce"
+              name="Planned Quantity"
               animationDuration={800}
             />
             <Bar
               dataKey="quantityProduced"
               fill="#055e7eff"
-              name="Quantity Produced"
+              name="Actual Quantity"
               animationDuration={800}
             />
           </BarChart>

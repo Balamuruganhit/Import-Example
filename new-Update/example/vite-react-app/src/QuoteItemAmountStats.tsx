@@ -82,9 +82,9 @@ const QuoteItemAmounts: React.FC = () => {
     (e.currentTarget as HTMLDivElement).style.color = "#0d9488"; // revert teal
   }}
 >
-  Total Quote Amount: {totalAmount.toLocaleString("en-US", {
+  Total Quote Amount: {totalAmount.toLocaleString("en-IN", {
     style: "currency",
-    currency: "USD",
+    currency: "INR",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}

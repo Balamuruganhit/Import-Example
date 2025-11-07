@@ -312,6 +312,16 @@ under the License.
     <attribute name="reworkCount" type="Long" mode="OUT" optional="true"/>
     <attribute name="rejectedCount" type="Long" mode="OUT" optional="true"/>
 </service>
+<service name="ListMonthlyReworkRejectedStats"
+         engine="groovy"
+         auth="true"
+         export="true"
+         action="GET"
+         location="component://example/src/main/groovy/org/apache/ofbiz/example/MonthlyReworkRejectedStats.groovy"
+         invoke="ListMonthlyReworkRejectedStats">
+    <description>Fetch monthly Rework vs Rejected counts from WorkEffort entity</description>
+    <attribute type="List" mode="OUT" name="monthlyReworkRejectedStats" optional="true"/>
+</service>
 
 <!-- ========================================================= -->
 <!-- List Rework WorkEfforts -->
