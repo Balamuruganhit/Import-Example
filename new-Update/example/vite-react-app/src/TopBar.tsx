@@ -7,7 +7,7 @@ interface TopBarProps {
 }
 
 // Add "ALL" at the beginning
-const tabs = ["ALL", "Orders", "Quotes", "Requests", "Productions", "Work Orders"];
+const tabs = ["ALL", "Orders", "Quotes", "Requests", "Productions & Work Orders"];
 
 const TopBar: React.FC<TopBarProps> = ({ activeTab, setActiveTab }) => {
   return (

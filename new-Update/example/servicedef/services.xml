@@ -327,7 +327,7 @@ under the License.
 <!-- List Rework WorkEfforts -->
 <!-- ========================================================= -->
 <service name="ListReworkWorkEfforts" engine="groovy" auth="true" export="true" action="GET"
-    location="component://example/src/main/groovy/org/apache/ofbiz/example/ListReworkWorkEfforts.groovy"
+    location="component://example/src/main/groovy/org/apache/ofbiz/example/listReworkWorkEfforts.groovy"
     invoke="ListReworkWorkEfforts">
     <description>Fetch list of WorkEffort IDs having status REWORK</description>
     <attribute type="List" mode="OUT" name="workEffortIds" optional="true"/>
@@ -337,7 +337,7 @@ under the License.
 <!-- List Rejected WorkEfforts -->
 <!-- ========================================================= -->
 <service name="ListRejectedWorkEfforts" engine="groovy" auth="true" export="true" action="GET"
-    location="component://example/src/main/groovy/org/apache/ofbiz/example/ListRejectedWorkEfforts.groovy"
+    location="component://example/src/main/groovy/org/apache/ofbiz/example/listRejectedWorkEfforts.groovy"
     invoke="ListRejectedWorkEfforts">
     <description>Fetch list of WorkEffort IDs having status REJECTED</description>
     <attribute type="List" mode="OUT" name="workEffortIds" optional="true"/>

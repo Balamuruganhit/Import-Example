@@ -11,39 +11,42 @@ def ListMonthlyQuotes() {
     def logModule = "ListMonthlyQuotes"
 
     try {
-        // Get current year
         def currentYear = java.time.Year.now().getValue()
 
-        // Fetch all Quote records
-        def orders = delegator.findList("Quote", null, null, null, null, false)
+        def allQuotes = delegator.findList("Quote", null, null, null, null, false)
+        def orderedQuotes = delegator.findList("Quote",
+            EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "QUO_ORDERED"),
+            null, null, null, false)
 
-        // Prepare monthly counts (index 0 = Jan, 11 = Dec)
-        def monthlyCounts = (0..<12).collect { 0 }
+        def totalCounts = (0..<12).collect { 0 }
+        def orderedCounts = (0..<12).collect { 0 }
 
-        orders.each { quote ->
-            // Use 'createdDate' field for quote date
-            def quoteDate = quote.getTimestamp("createdStamp")
-            if (quoteDate) {
-                def quoteYear = quoteDate.toLocalDateTime().getYear()
-                if (quoteYear == currentYear) {
-                    def monthIndex = quoteDate.toLocalDateTime().getMonthValue() - 1
-                    monthlyCounts[monthIndex] = monthlyCounts[monthIndex] + 1
-                }
-            }
+        allQuotes.each { quote ->
+            def d = quote.getTimestamp("createdStamp")
+            if (d && d.toLocalDateTime().getYear() == currentYear)
+                totalCounts[d.toLocalDateTime().getMonthValue() - 1]++
         }
 
-        // Convert to list of maps for frontend display
+        orderedQuotes.each { quote ->
+            def d = quote.getTimestamp("createdStamp")
+            if (d && d.toLocalDateTime().getYear() == currentYear)
+                orderedCounts[d.toLocalDateTime().getMonthValue() - 1]++
+        }
+
         def monthNames = [
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ]
 
         def monthlyQuoteList = (0..<12).collect { i ->
-            [label: monthNames[i], value: monthlyCounts[i]]
+            [
+                label: monthNames[i],
+                total: totalCounts[i],
+                ordered: orderedCounts[i]
+            ]
         }
 
         Debug.logInfo("Monthly quote data: ${monthlyQuoteList}", logModule)
-
         return [success: true, monthlyQuoteList: monthlyQuoteList]
 
     } catch (GenericEntityException e) {

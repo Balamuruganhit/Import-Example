@@ -95,6 +95,26 @@ const [activeTab, setActiveTab] = useState("ALL");
   const [showPopup, setShowPopup] = useState(false);
   const [popupTitle, setPopupTitle] = useState("");
   const [workEffortIds, setWorkEffortIds] = useState<string[]>([]);
+// Virtual scroll optimization for large datasets
+const [visibleStart, setVisibleStart] = useState(0);
+const [visibleEnd, setVisibleEnd] = useState(50); // render only ~50 items at once
+
+useEffect(() => {
+  const container = document.getElementById("virtual-scroll");
+  if (!container) return;
+
+  const handleScroll = () => {
+    const scrollTop = container.scrollTop;
+    const itemHeight = 32; // approx height per <li>
+    const visibleCount = Math.ceil(container.clientHeight / itemHeight);
+    const startIdx = Math.floor(scrollTop / itemHeight);
+    setVisibleStart(startIdx);
+    setVisibleEnd(startIdx + visibleCount + 20); // buffer
+  };
+
+  container.addEventListener("scroll", handleScroll);
+  return () => container.removeEventListener("scroll", handleScroll);
+}, [workEffortIds]);
 
   // --- Utility Functions ---
   const getYearlyColors = (data: any[]) => {
@@ -557,7 +577,7 @@ const [activeTab, setActiveTab] = useState("ALL");
     />
   )}
 
-  {(activeTab === "ALL" || activeTab === "Productions") && (
+  {(activeTab === "ALL" || activeTab === "Productions & Work Orders") && (
     <>
       <StatBox
         title="Production Run"
@@ -576,7 +596,7 @@ const [activeTab, setActiveTab] = useState("ALL");
     </>
   )}
 
-  {(activeTab === "ALL" || activeTab === "Work Orders") && (
+  {(activeTab === "ALL" || activeTab === "Productions & Work Orders") && (
     <StatBox
       title="Work Orders"
       values={[
@@ -668,7 +688,7 @@ const [activeTab, setActiveTab] = useState("ALL");
 </div>{/* --- Production & Work Order Pie Charts --- */}
 <div className="charts-row">
   {/* Production Run Summary */}
-  {(activeTab === "ALL" || activeTab === "Productions") && (
+  {(activeTab === "ALL" || activeTab === "Productions & Work Orders") && (
     <div className="chart-card">
       <h2>Production Run Summary</h2>
       {productionRunData.length > 0 ? (
@@ -694,7 +714,7 @@ const [activeTab, setActiveTab] = useState("ALL");
   )}
 
   {/* Work Order Summary */}
-  {(activeTab === "ALL" || activeTab === "Work Orders") && (
+  {(activeTab === "ALL" || activeTab === "Productions & Work Orders") && (
     <div className="chart-card">
       <h2>Work Order Summary</h2>
       {workOrderData.length > 0 ? (
@@ -717,7 +737,7 @@ const [activeTab, setActiveTab] = useState("ALL");
   )}
 
   {/* Rework & Rejected */}
-  {(activeTab === "ALL" || activeTab === "Productions") && (
+  {(activeTab === "ALL" || activeTab === "Productions & Work Orders") && (
     <div className="chart-card">
       <h2>Rework & Rejected</h2>
       {(reworkRejectedStats.rework > 0 || reworkRejectedStats.rejected > 0) ? (
@@ -744,7 +764,7 @@ const [activeTab, setActiveTab] = useState("ALL");
   )}
 </div>
      {/* --- Quantity Produced Chart --- */}
-{(activeTab === "ALL" || activeTab === "Productions") && (
+{(activeTab === "ALL" || activeTab === "Productions & Work Orders") && (
   <div className="charts-row">
     <QuantityProducedChart />
   </div>
@@ -780,24 +800,35 @@ const [activeTab, setActiveTab] = useState("ALL");
 {/* --- Quotes Charts --- */}
 {(activeTab === "ALL" || activeTab === "Quotes") && (
   <div className="charts-row">
-    {[
-      { title: "Monthly Quotes", data: monthlyQuotes, color: "#020b86ff", label: "Quotes" },
-    ].map((chart, idx) => (
-      <div className="chart-card" key={idx}>
-        <h2>{chart.title}</h2>
-        <div className="chart-container">
-          <Bar
-            ref={monthlyQuoteRef}
-            data={createBarChartData(chart.data, chart.label, chart.color)}
-            options={createBarChartOptions(chart.data, chart.title)}
-          />
-        </div>
+    <div className="chart-card">
+      <h2>Monthly Quotes</h2>
+      <div className="chart-container">
+        <Bar
+          ref={monthlyQuoteRef}
+          data={{
+            labels: monthlyQuotes.map(item => item.label),
+            datasets: [
+              {
+                label: "Total Quotes",
+                data: monthlyQuotes.map(item => item.total),
+                backgroundColor: "#020b86ff",
+              },
+              {
+                label: "Ordered Quotes",
+                data: monthlyQuotes.map(item => item.ordered),
+                backgroundColor: "#ff7f0e",
+              },
+            ],
+          }}
+          options={createBarChartOptions(monthlyQuotes, "Monthly Quotes")}
+        />
       </div>
-    ))}
+    </div>
   </div>
 )}
+
       {/* --- Monthly Production Chart --- */}
-{(activeTab === "ALL" || activeTab === "Productions") && (
+{(activeTab === "ALL" || activeTab === "Productions & Work Orders") && (
   <>
     {loadingMonthlyExtra ? (
       <p>Loading monthly production charts...</p>
@@ -821,7 +852,7 @@ const [activeTab, setActiveTab] = useState("ALL");
 )}
 
 {/* --- Monthly Work Order Chart --- */}
-{(activeTab === "ALL" || activeTab === "Work Orders") && (
+{(activeTab === "ALL" || activeTab === "Productions & Work Orders") && (
   <>
     {loadingMonthlyExtra ? (
       <p>Loading monthly work order charts...</p>
@@ -843,7 +874,7 @@ const [activeTab, setActiveTab] = useState("ALL");
     )}
   </>
 )}
-{(activeTab === "ALL" || activeTab === "Productions") && (
+{(activeTab === "ALL" || activeTab === "Productions & Work Orders") && (
   <div className="charts-row">
     <MonthlyReworkRejectedChart />
   </div>
@@ -884,36 +915,50 @@ const [activeTab, setActiveTab] = useState("ALL");
       </div>
     )}
     {/* --- Popup Modal for WorkEffort IDs --- */}
-    {showPopup && (
-      <div className="popup-overlay" onClick={() => setShowPopup(false)}>
-        <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-          <h3>{popupTitle}</h3>
-          <div className="popup-inner-scroll" style={{ marginTop: "10px" }}>
+{showPopup && (
+  <div className="popup-overlay" onClick={() => setShowPopup(false)}>
+    <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+      <h3>{popupTitle}</h3>
+
+      <div className="popup-inner-scroll" style={{ marginTop: "10px" }}>
+        {workEffortIds.length > 0 ? (
+          <div
+            id="virtual-scroll"
+            style={{
+              maxHeight: "50vh",
+              overflowY: "auto",
+              border: "1px solid #e0e0e0",
+              borderRadius: "8px",
+            }}
+          >
             {workEffortIds.length > 0 ? (
-              <ul>
-                {workEffortIds.slice(0, 300).map((id, idx) => (
-                  <li key={idx}>{id}</li>
+              <ul
+                style={{
+                  listStyleType: "none",
+                  padding: 0,
+                  margin: 0,
+                }}
+              >
+                {/* Virtual rendering for large lists */}
+                {workEffortIds.slice(visibleStart, visibleEnd).map((id, idx) => (
+                  <li key={visibleStart + idx} className="popup-list-item">
+                    {id}
+                  </li>
                 ))}
               </ul>
             ) : (
               <p>No WorkEfforts found.</p>
             )}
-            {workEffortIds.length > 300 && (
-              <p
-                style={{
-                  color: "gray",
-                  marginTop: "10px",
-                  fontSize: "13px",
-                }}
-              >
-                Showing first 300 items only. Please refine your search.
-              </p>
-            )}
           </div>
-          <button onClick={() => setShowPopup(false)}>Close</button>
-        </div>
+        ) : (
+          <p>No WorkEfforts found.</p>
+        )}
       </div>
-    )}
+
+      <button onClick={() => setShowPopup(false)}>Close</button>
+    </div>
+  </div>
+)}
   </div>
   
 );
