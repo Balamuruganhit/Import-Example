@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of PanguAi Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+    <entity entity-name="FemaTitleDetail" package-name="org.apache.ofbiz.PanguAi" title="Fema Entity">
+        <field name="femaId" type="id"/>
+        <field name="drawing" type="name"/>
+        <field name="part" type="name"/>
+        <field name="rev" type="numeric"/>
+        <field name="comp" type="url"/>
+        <field name="design" type="url"/>
+        <field name="prepareField" type="name"/>
+        <field name="team" type="url"/> <!-- Field to store Base64-encoded string -->
+        <field name="femaDate" type="id"/>
+        <prim-key field="femaId"/>
+    </entity>
+    <entity entity-name="FemaTableDetail" package-name="org.apache.ofbiz.PanguAi" title="Fema Entity">
+        <field name="genId" type="id"/>
+        <field name="femaId" type="id"/>
+        <field name="item" type="name"/>
+        <field name="functionPart" type="name"/>
+        <field name="achieve" type="url"/>
+        <field name="failureMode" type="url"/>
+        <field name="potentialEffects" type="url"/>
+        <field name="feverity" type="name"/>
+        <field name="potentialCause" type="url"/>
+        <field name="occurrence" type="name"/>
+        <field name="severity" type="id"/>
+        <field name="designControl" type="name"/>
+        <field name="detectionControl" type="name"/>
+        <field name="detection" type="numeric"/>
+        <field name="rPN" type="url"/>
+        <field name="action" type="url"/>
+        <field name="responsibility" type="name"/>
+        <field name="actionTaken" type="url"/> <!-- Field to store Base64-encoded string -->
+        <field name="severity1" type="id"/>
+        <field name="occurrence1" type="name"/>
+        <field name="detection1" type="name"/>
+        <field name="rPN1" type="numeric"/>
+        <prim-key field="genId"/>
+    </entity>
+    <entity entity-name="ramsheader"  package-name="org.apache.ofbiz.PanguAi" title="Rams Entity">
+        <field name="ramsNo" type="id"></field>
+        <field name="revision" type="id"></field>
+        <field name="productCode" type="id"></field>
+        <field name="system" type="name"></field>
+        <field name="subsystem" type="name"></field>
+        <field name="subsubsystem" type="name"></field>
+        <field name="rams" type="url"></field>
+        <field name="date" type="name"></field>
+        <field name="team" type="name"></field>
+        <field name="approver" type="name"></field>
+        <prim-key field="ramsNo" />
+    </entity>
+    <entity entity-name="ramsData"  package-name="org.apache.ofbiz.PanguAi" title="RamsData Entity">
+        <field name="ramsNo" type="id"></field>
+        <field name="genId" type="id"></field>
+        <field name="calculatorType" type="name"></field>
+        <field name="int1" type="name"></field>
+        <field name="int2" type="name"></field>
+        <field name="int3" type="name"></field>
+        <field name="out1" type="name"></field>
+        <field name="out2" type="name"></field>
+        <field name="out3" type="name"></field>
+        <field name="out4" type="name"></field>
+        <field name="out5" type="name"></field>
+        <field name="out6" type="name"></field>
+        <prim-key field="genId" />
+    </entity>
+    <entity entity-name="ramsDataNew"  package-name="org.apache.ofbiz.PanguAi" title="RamsData Entity">
+        <field name="ramsNo" type="id"></field>
+        <field name="genId" type="id"></field>
+        <field name="calculatorType" type="name"></field>
+        <field name="int1" type="name"></field>
+        <field name="int2" type="name"></field>
+        <field name="int3" type="name"></field>
+        <field name="out1" type="name"></field>
+        <field name="out2" type="name"></field>
+        <field name="out3" type="name"></field>
+        <field name="out4" type="name"></field>
+        <field name="out5" type="name"></field>
+        <field name="out6" type="name"></field>
+        <prim-key field="genId" />
+    </entity>
+    <entity entity-name="fracasDetails"  package-name="org.apache.ofbiz.PanguAi" title="RamsData Entity">
+        <field name="complaintNumber" type="id"></field>
+        <field name="complaintDate" type="id"></field>
+        <field name="customerName" type="name"></field>
+        <field name="system" type="name"></field>
+        <field name="subSystem" type="name"></field>
+        <field name="subSubSystem" type="name"></field>
+        <field name="startWarranty" type="date"></field>
+        <field name="endWarranty" type="date"></field>
+        <field name="customerZone" type="name"></field>
+         <field name="prototype" type="name"></field>
+        <field name="partNumber" type="name"></field>
+        <field name="reportNumber" type="name"></field>
+        <field name="revision" type="name"></field>
+        <field name="partdescription" type="name"></field>
+        <field name="createDate" type="date"></field>
+        <field name="failureType" type="name"></field>
+        <field name="failureNature" type="name"></field>
+        <field name="closureDate" type="name"></field>
+        <field name="status" type="name"></field>
+        <field name="rootCauses" type="url"></field>
+        <field name="action" type="url"></field>
+        <field name="problemReported" type="url"></field>
+        <field name="defectObserved" type="url"></field>
+        <field name="correctiveAction" type="url"></field>
+        <field name="actualDate" type="name"></field>
+        <field name="RDAction" type="url"></field>
+        <field name="costImplication" type="url"></field>
+        <field name="response1" type="name"></field>
+        <field name="response2" type="name"></field>
+        <field name="approver" type="name"></field>
+        <prim-key field="reportNumber" />
+    </entity>   
+</entitymodel>

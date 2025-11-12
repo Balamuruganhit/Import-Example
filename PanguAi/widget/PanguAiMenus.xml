@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ofbiz.apache.org/Widget-Menu" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Menu http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    <menu name="MainAppBarRams" title="${uiLabelMap.PanguAiApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="MainMenu" title="Main Menu"><link target="/DemoPage/control/ReliabilityMenu" url-mode="inter-app"/></menu-item>
+       
+        <menu-item name="rams" title="RAMS Analysis"><link target="ramsSelector"/></menu-item>
+    </menu>
+    <menu name="MainAppBarFMEA" title="${uiLabelMap.PanguAiApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="MainMenu" title="Main Menu"><link target="/DemoPage/control/ReliabilityMenu" url-mode="inter-app"/></menu-item>
+        <menu-item name="fema" title="FMEA Analysis"><link target="selector"/></menu-item>
+       
+    </menu>
+    <menu name="MainAppBarFracas" title="${uiLabelMap.PanguAiApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="MainMenu" title="Main Menu"><link target="/DemoPage/control/ReliabilityMenu" url-mode="inter-app"/></menu-item>
+        <menu-item name="fracas" title="FRACAS Analysis"><link target="findfracas"/></menu-item>
+       
+    </menu>
+    <menu name="MainAppBarFracasSub"  menu-container-style="button-bar button-style-2" default-selected-style="selected">
+        <menu-item name="singleProduct" title="Single Products"><link target="findfracas" url-mode="inter-app"/></menu-item>
+        <menu-item name="MultipleProduct" title="Multiple Products"><link target="multipleFind" url-mode="inter-app"/></menu-item>
+       
+    </menu>
+</menus>

@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://ofbiz.apache.org/Widget-Screen"
+    xsi:schemaLocation="http://ofbiz.apache.org/Widget-Screen http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <screen name="main">
+        <section>
+            <actions>
+                <set field="headerItem" value="main"/><!-- this highlights the selected
+                menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="PanguAiCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                            <platform-specific>
+                                <html><html-template location="component://PanguAi/template/chatbot.ftl"/></html>
+                            </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="fema">
+        <section>
+            <actions>
+                <set field="layoutSettings.javaScripts[]" value="/PanguAi/static/fema.js" global="true"/>
+                <script location="component://PanguAi/groovyScripts/femaReport.groovy"/>
+                <set field="headerItem" value="fema"/><!-- this
+                highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="FmeaCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                            <platform-specific>
+                                <html><html-template location="component://PanguAi/template/fema.ftl"/></html>
+                            </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="rams">
+        <section>
+            <actions>
+                <set field="layoutSettings.javaScripts[]" value="/PanguAi/static/ram.js" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="/PanguAi/static/rams.css" global="true"/>
+                <script location="component://PanguAi/groovyScripts/ramsReport.groovy"/>
+                <set field="headerItem" value="rams"/><!--
+                this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="RamsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                            <platform-specific>
+                                <html><html-template location="component://PanguAi/template/rams.ftl"/></html>
+                            </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="viewrams">
+        <section>
+            <actions>
+                <set field="layoutSettings.javaScripts[]" value="/PanguAi/static/ram.js" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="/PanguAi/static/rams.css" global="true"/>
+                <script location="component://PanguAi/groovyScripts/ramsReport.groovy"/>
+                <set field="headerItem" value="rams"/><!--
+                this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="RamsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                            <platform-specific>
+                                <html><html-template location="component://PanguAi/template/viewRams.ftl"/></html>
+                            </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="viewFema">
+        <section>
+            <actions>
+                <set field="layoutSettings.javaScripts[]" value="/PanguAi/static/ram.js" global="true"/>
+                <set field="layoutSettings.styleSheets[]" value="/PanguAi/static/rams.css" global="true"/>
+                <script location="component://PanguAi/groovyScripts/femaReport.groovy"/>
+                <set field="headerItem" value="fema"/><!--
+                this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="FmeaCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                            <platform-specific>
+                                <html><html-template location="component://PanguAi/template/viewFema.ftl"/></html>
+                            </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="selector">
+        <section>
+            <actions>
+                <script location="component://PanguAi/groovyScripts/femaService.groovy"/>
+                <set field="titleProperty" value="Find FMEA Analysis"/>
+                <set field="headerItem" value="fema"/><!-- this
+                highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="FmeaCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="fema" text="${uiLabelMap.CommonCreate}" style="buttontext create"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindFema" location="component://PanguAi/widget/PanguAiForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListSearchFema" location="component://PanguAi/widget/PanguAiForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                               
+                            </widgets>
+                            
+                        </section>
+                            
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="selectorRams">
+        <section>
+            <actions>
+                <set field="layoutSettings.javaScripts[]" value="/PanguAi/static/selector.js" global="true"/>
+                <script location="component://PanguAi/groovyScripts/ramsService.groovy"/>
+                <set field="titleProperty" value="Find RAMS Analysis"/>
+                <set field="headerItem" value="rams"/><!--
+                this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="RamsCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                                
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="rams" text="${uiLabelMap.CommonCreate}" style="buttontext create"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindRams" location="component://PanguAi/widget/PanguAiForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListSearchRams" location="component://PanguAi/widget/PanguAiForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                                <container>
+                                                <platform-specific>
+                                            <html><html-template location="component://PanguAi/template/selector.ftl"/></html>
+                                        </platform-specific>
+                                            </container> 
+                            </widgets>
+                            
+                        </section>
+                            
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MasterReport">
+        <section>
+                <actions>
+                    <set field="pageLayoutName" value="simple-landscape"/>
+                    <set field="ender" value="ender"/>
+                    <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                    <script location="component://PanguAi/groovyScripts/masterrams.groovy"/>
+                    <set field="viewSize" value="99999"/>
+                   <set field="headerFontSize" value="19pt" type="String"/>
+                   <set field="pageLayoutWidth" value="42.7in" type="String"/>
+                    <set field="footerFontSize" value="17pt" type="String"/>
+                </actions>
+                <widgets>
+                    <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                        <decorator-section name="body">
+                            <container>
+                                <platform-specific>
+                                    <xsl-fo>
+                                        <html-template location="component://PanguAi/template/masterReport.fo.ftl"/>
+                                    </xsl-fo>
+                                </platform-specific>
+                            </container>
+                        </decorator-section>
+                    </decorator-screen>
+                </widgets>
+            </section>
+    </screen>
+    <screen name="ReportPdf">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="dfema" from-field="parameters.dfema" type="String"/>
+                <set field="headerFontSize" value="13pt" type="String"/>
+                <set field="footerFontSize" value="13pt" type="String"/>
+                <script location="component://PanguAi/groovyScripts/femaReport.groovy"/>
+                <set field="viewSize" value="99999"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <container>
+                             
+                            <platform-specific>
+                               
+                                <xsl-fo>
+                                    <html-template location="component://PanguAi/template/femareportPdf.fo.ftl"/>
+                                </xsl-fo>
+                            </platform-specific>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+        </screen>
+    <screen name="ReportPdfRams">
+            <section>
+                <actions>
+                    <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                    <set field="rams" from-field="parameters.rams" type="String"/>
+                    <set field="ender" value="ender"/>
+                    <script location="component://PanguAi/groovyScripts/ramsReport.groovy"/>
+                    <set field="viewSize" value="99999"/>
+                </actions>
+                <widgets>
+                    <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                        <decorator-section name="body">
+                            <container>
+                                <platform-specific>
+                                    <xsl-fo>
+                                        <html-template location="component://PanguAi/template/ramsreport.fo.ftl"/>
+                                    </xsl-fo>
+                                </platform-specific>
+                            </container>
+                        </decorator-section>
+                    </decorator-screen>
+                </widgets>
+            </section>
+    </screen>
+    <screen name="fracasfindscreen">
+        <section>
+            <actions>
+                <set field="layoutSettings.javaScripts[]" value="/PanguAi/static/selector.js" global="true"/>
+                <script location="component://PanguAi/groovyScripts/fracasReport.groovy"/>
+                <set field="titleProperty" value="FRACAS REGISTER FOR SINGLE PRODUCT"/>
+                <set field="headerItem" value="fracas"/><!--
+                this highlights the selected menu-item with name "main" -->
+                <set field="exampleCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="FracasCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                             <screenlet   >
+                                <include-menu name="MainAppBarFracasSub" location="component://PanguAi/widget/PanguAiMenus.xml"/>
+                            </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+                            <widgets>
+                                
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="createfracas" text="${uiLabelMap.CommonCreate}" style="buttontext create"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindFracas" location="component://PanguAi/widget/PanguAiForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListSearchFracas" location="component://PanguAi/widget/PanguAiForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                                <container>
+                                                <platform-specific>
+                                            <html><html-template location="component://PanguAi/template/selector.ftl"/></html>
+                                        </platform-specific>
+                                            </container> 
+                            </widgets>
+                            
+                        </section>
+                            
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="multipleFind">
+        <section>
+            <actions>
+                <set field="layoutSettings.javaScripts[]" value="/PanguAi/static/selector.js" global="true"/>
+                <script location="component://PanguAi/groovyScripts/fracasReport.groovy"/>
+                <set field="titleProperty" value="FRACAS REGISTER FOR MULTIPLE PRODUCT "/>
+                <set field="headerItem" value="fracas"/><!--
+                this highlights the selected menu-item with name "main" -->
+                <set field="exampleCtx" from-field="parameters"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="FracasCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <widgets>
+                             <screenlet   >
+                                <include-menu name="MainAppBarFracasSub" location="component://PanguAi/widget/PanguAiMenus.xml"/>
+                            </screenlet>
+                            </widgets>
+                        </section>
+                        <section>
+                            <widgets>
+                                
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindFracasMultiple" location="component://PanguAi/widget/PanguAiForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListSearchFracas" location="component://PanguAi/widget/PanguAiForms.xml"/>
+                                    </decorator-section>
+                                </decorator-screen>
+                                <container>
+                                                <platform-specific>
+                                            <html><html-template location="component://PanguAi/template/selector.ftl"/></html>
+                                        </platform-specific>
+                                            </container> 
+                            </widgets>
+                            
+                        </section>
+                            
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="fracascreatescreen">
+        <section>
+            <actions>
+                
+                <script location="component://PanguAi/groovyScripts/fracasReport.groovy"/>
+
+                <set field="headerItem" value="rams"/><!--
+                this highlights the selected menu-item with name "main" -->
+            </actions>
+            <widgets>
+                <decorator-screen name="FracasCommonDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                            <platform-specific>
+                                <html><html-template location="component://PanguAi/template/fracas.ftl"/></html>
+                            </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="MasterReportFracas">
+        <section>
+                <actions>
+                    <set field="pageLayoutName" value="simple-landscape"/>
+                    <set field="ender" value="ender"/>
+                    <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                    <script location="component://PanguAi/groovyScripts/MasterFracas.groovy"/>
+                    <set field="viewSize" value="99999"/>
+                    <set field="headerFontSize" value="19pt" type="String"/>
+                    <set field="pageLayoutWidth" value="42.7in" type="String"/>
+                    <set field="footerFontSize" value="17pt" type="String"/>
+                </actions>
+                <widgets>
+                    <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                        <decorator-section name="body">
+                            <container>
+                                <platform-specific>
+                                    <xsl-fo>
+                                        <html-template location="component://PanguAi/template/masterReportFracas.fo.ftl"/>
+                                    </xsl-fo>
+                                </platform-specific>
+                            </container>
+                        </decorator-section>
+                    </decorator-screen>
+                </widgets>
+            </section>
+    </screen>
+     <screen name="fracasReport">
+            <section>
+                <actions>
+                    <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                    <script location="component://PanguAi/groovyScripts/fracasReport.groovy"/>
+                    <set field="viewSize" value="99999"/>
+                </actions>
+                <widgets>
+                    <decorator-screen name="SimpleDecorator" location="component://common/widget/CommonScreens.xml">
+                        <decorator-section name="body">
+                            <container>
+                                
+                                <platform-specific>
+                                    <xsl-fo>
+                                        <html-template location="component://PanguAi/template/NewFracasReport.fo.ftl"/>
+                                    </xsl-fo>
+                                </platform-specific>
+                            </container>
+                        </decorator-section>
+                    </decorator-screen>
+                </widgets>
+            </section>
+    </screen>
+</screens>
