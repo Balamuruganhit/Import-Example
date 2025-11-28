@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Site-Conf" xsi:schemaLocation="http://ofbiz.apache.org/Site-Conf http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!-- The controller elements that are common to all OFBiz components
+         can be found in the following xml file. A component can override the
+         elements found in the common-controller.xml file. -->
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+
+    <description>AuditReport Component Site Configuration File</description>
+
+    <!-- Events to run on every request before security (chains exempt) -->
+    <!--
+    <preprocessor>
+    </preprocessor>
+    -->
+    <!-- Events to run on every request after all other processing (chains exempt) -->
+    <!--
+    <postprocessor>
+        <event name="test" type="java" path="org.apache.ofbiz.webapp.event.TestEvent" invoke="test"/>
+    </postprocessor>
+    -->
+
+    <!-- Request Mappings -->
+    
+     <!-- Request Mappings -->
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="config"/></request-map>
+    <request-map uri="As9100Land"><security https="true" auth="true"/><response name="success" type="view" value="As9100Land"/></request-map>
+    <request-map uri="CreateQuestion"><security https="true" auth="true"/>
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/>
+        <response name="error" type="view" value="config"/>
+    </request-map>
+    <request-map uri="createReportDetail">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createReportDetail"/>
+        <response name="success" type="view" value="pickReview"/>
+        <response name="error" type="view" value="pickReview"/>
+    </request-map>
+    <request-map uri="Report.pdf">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReportPdf"/>
+        <response name="error" type="view" value="Export"/>
+    </request-map>
+    <request-map uri="Report.csv">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ReportCsv"/>
+        <response name="error" type="view" value="Export"/>
+    </request-map>
+    <request-map uri="createParties">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartiesReport"/>
+        <response name="success" type="view" value="parties"/>
+        <response name="error" type="view" value="classFour"/>
+    </request-map>
+    <request-map uri="createDesign">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createDesignReport"/>
+        <response name="success" type="view" value="createDesignDevelopment"/>
+        <response name="error" type="view" value="classFour"/>
+    </request-map>
+
+    <request-map uri="createOrganisationReport">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createOrganisationReport"/>
+        <response name="success" type="view" value="organisation"/>
+        <response name="error" type="view" value="classFour"/>
+    </request-map>
+    <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
+    
+    
+    <!-- Audit IRIS-->
+     <request-map uri="irismenu">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="irismenu"/>
+        <response name="error" type="view" value="classFour"/>
+    </request-map>
+        <request-map uri="riskRegisterSearch">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="riskRegisterSearch"/>
+        <response name="error" type="view" value="riskRegisterSearch"/>
+    </request-map>
+    <request-map uri="createriskRegister">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createriskRegister"/>
+        <response name="error" type="view" value="classFour"/>
+    </request-map>
+    <request-map uri="createRiskRegister">
+            <!-- <event type="service" invoke="createQuestion"/>
+            <response name="success" type="view" value="config"/> -->
+            <security https="true" auth="true"/>
+            <event type="service" path="" invoke="createRiskRegister"/>
+            <response name="success" type="view" value="createriskRegister"/>
+            <response name="error" type="view" value="createriskRegister"/>
+    </request-map>
+    <request-map uri="viewriskRegister">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="viewriskRegister"/>
+        <response name="error" type="view" value="riskRegisterSearch"/>
+    </request-map>
+    <request-map uri="RiskRegisterReport">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="RiskRegisterReport"/>
+        <response name="error" type="view" value="riskRegisterSearch"/>
+    </request-map>
+    <request-map uri="turtleSearch">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="turtleSearch"/>
+        <response name="error" type="view" value="turtleSearch"/>
+    </request-map>
+    <request-map uri="createturtleDoc">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="createturtleDoc"/>
+        <response name="error" type="view" value="turtleSearch"/>
+    </request-map>
+    <request-map uri="createTurtleDoc">
+            <!-- <event type="service" invoke="createQuestion"/>
+            <response name="success" type="view" value="config"/> -->
+            <security https="true" auth="true"/>
+            <event type="service" path="" invoke="createTurtleDoc"/>
+            <response name="success" type="view" value="createturtleDoc"/>
+            <response name="error" type="view" value="createriskRegister"/>
+    </request-map>
+    <request-map uri="TurtleReport">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TurtleReport"/>
+        <response name="error" type="view" value="TurtleReport"/>
+    </request-map>
+    <request-map uri="ChangeMangement">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ChangeMangement"/>
+        <response name="error" type="view" value="ChangeMangement"/>
+    </request-map>
+    <request-map uri="ControlMatrix">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ControlMatrix"/>
+        <response name="error" type="view" value="ControlMatrix"/>
+    </request-map>
+     <request-map uri="CreateChangeMatrixDoc">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CreateChangeMatrixDoc"/>
+        <response name="error" type="view" value="CreateChangeMatrixDoc"/>
+    </request-map>
+    <request-map uri="ViewChangeControl">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ViewChangeControl"/>
+        <response name="error" type="view" value="ViewChangeControl"/>
+    </request-map>
+    <request-map uri="ChangeControlReport">
+        <!-- <event type="service" invoke="createQuestion"/>
+        <response name="success" type="view" value="config"/> -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ChangeControlReport"/>
+        <response name="error" type="view" value="ChangeControlReport"/>
+    </request-map>
+    <!-- Audit AS9100 and ISO9100-->
+
+    <request-map uri="AuditExport"><security https="true" auth="true"/><response name="success" type="view" value="export"/></request-map>    
+    <request-map uri="ospreport"><security https="true" auth="true"/><response name="success" type="view" value="config"/></request-map>
+    <request-map uri="config"><security https="true" auth="true"/><response name="success" type="view" value="config"/></request-map>
+    <request-map uri="pickReview"><security https="true" auth="true"/><response name="success" type="view" value="pickReview"/></request-map>
+    <request-map uri="kpi"><security https="true" auth="true"/><response name="success" type="view" value="kpi"/></request-map>
+    <request-map uri="ProductionPlan"><security https="true" auth="true"/><response name="success" type="view" value="ProductionPlan"/></request-map>
+    <request-map uri="ProductionAndActual"><security https="true" auth="true"/><response name="success" type="view" value="ProductionAndActual"/></request-map>
+    <request-map uri="otdCreator"><security https="true" auth="true"/><response name="success" type="view" value="otdCreator"/></request-map>
+    <request-map uri="OtdRangeSetter"><security https="true" auth="true"/><response name="success" type="view" value="OtdRangeSetter"/></request-map>
+    <request-map uri="PrintOTD"><security https="true" auth="true"/><response name="success" type="view" value="PrintOTD"/></request-map>  
+    <request-map uri="ListOfReport"><security https="true" auth="true"/><response name="success" type="view" value="ListOfReport"/></request-map>
+    <request-map uri="classFour"><security https="true" auth="true"/><response name="success" type="view" value="classFour"/></request-map>
+    <request-map uri="parties"><security https="true" auth="true"/><response name="success" type="view" value="parties"/></request-map>
+    <request-map uri="organisation"><security https="true" auth="true"/><response name="success" type="view" value="organisation"/></request-map>
+    <request-map uri="openParties"><security https="true" auth="true"/><response name="success" type="view" value="parties"/></request-map>
+    <request-map uri="ReportPdfparties"><security https="true" auth="true"/><response name="success" type="view" value="ReportPdfparties"/></request-map>
+    <request-map uri="openOraganisationReport"><security https="true" auth="true"/><response name="success" type="view" value="organisation"/></request-map>
+    <request-map uri="ReportPdfOrganisation"><security https="true" auth="true"/><response name="success" type="view" value="ReportPdfOrganisation"/></request-map>
+
+    <request-map uri="classFive"><security https="true" auth="true"/><response name="success" type="view" value="classFive"/></request-map>
+
+    <request-map uri="classSix"><security https="true" auth="true"/><response name="success" type="view" value="classSix"/></request-map>
+    <request-map uri="classSeven"><security https="true" auth="true"/><response name="success" type="view" value="classSeven"/></request-map>
+    <request-map uri="classEight"><security https="true" auth="true"/><response name="success" type="view" value="classEight"/></request-map>
+    <request-map uri="createDesignDevelopment"><security https="true" auth="true"/><response name="success" type="view" value="createDesignDevelopment"/></request-map>
+    <request-map uri="ReportPdfDesign"><security https="true" auth="true"/><response name="success" type="view" value="ReportPdfDesign"/></request-map>
+
+    <request-map uri="classNine"><security https="true" auth="true"/><response name="success" type="view" value="classNine"/></request-map>
+    <request-map uri="classTen"><security https="true" auth="true"/><response name="success" type="view" value="classTen"/></request-map>
+<request-map uri="fetchQuantityData">
+    <security https="false" auth="true"/>
+    <event type="service" name="FetchQuantityProducedPaged">
+        <field-map field-name="userLogin" from-session="userLogin"/>
+    </event>
+    <response name="success" type="view" value="json"/>
+</request-map>
+
+<view-map name="json" type="json"/>
+
+    <!-- View Mappings -->
+     <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
+    <view-map name="main" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#main"/>
+     <view-map name="As9100Land" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#As9100Land"/>
+    <view-map name="config" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#config"/>
+    <view-map name="export" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#export"/>   
+    <view-map name="pickReview" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#pickReview"/>
+    <view-map name="ReportCsv" type="screencsv" page="component://AuditReport/widget/AuditReportScreens.xml#ReportCsv" content-type="text/csv" encoding="none"/>
+    <view-map name="ReportPdf" type="screenfop" page="component://AuditReport/widget/AuditReportScreens.xml#ReportPdf" content-type="application/pdf" encoding="none"/>
+    <view-map name="kpi" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#kpi" />
+    <view-map name="ProductionPlan" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#ProductionAndActualFrontPage" />
+    <view-map name="ProductionAndActual" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#ProductionAndActual" />
+    <view-map name="OtdRangeSetter" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#OntimeDeliveryFrontPage" />
+    <view-map name="otdCreator" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#otdCreator" />
+    <view-map name="PrintOTD" type="screenfop" page="component://AuditReport/widget/AuditReportScreens.xml#PrintOTD" content-type="application/pdf" encoding="none"/>
+
+
+    <view-map name="ListOfReport" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#Iso" />
+    <view-map name="classFour" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#classFour" />
+    <view-map name="parties" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#parties" />
+    <view-map name="ReportPdfparties" type="screenfop" page="component://AuditReport/widget/AuditReportScreens.xml#ReportPdfparties" content-type="application/pdf" encoding="none"/>
+    <view-map name="organisation" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#organisation"/>
+    <view-map name="ReportPdfOrganisation" type="screenfop" page="component://AuditReport/widget/AuditReportScreens.xml#ReportPdfOrganisation" content-type="application/pdf" encoding="none"/>
+
+    <view-map name="classFive" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#classFive" />
+
+    <view-map name="classSix" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#classSix" />
+    
+    <view-map name="classSeven" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#classSeven" />
+
+    <view-map name="classEight" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#classEight" />
+    <view-map name="createDesignDevelopment" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#createDesignDevelopment" />
+    <view-map name="ReportPdfDesign" type="screenfop" page="component://AuditReport/widget/AuditReportScreens.xml#ReportPdfDesignDevelopment" content-type="application/pdf" encoding="none"/>
+
+    <view-map name="classNine" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#classNine" />
+    
+    <view-map name="classTen" type="screen" page="component://AuditReport/widget/AuditReportScreens.xml#classTen" />
+    <!-- Audit IRIS-->
+    <view-map name="irismenu" type="screen" page="component://AuditReport/widget/IRISReportScreens.xml#irismenu" />
+    <view-map name="riskRegisterSearch" type="screen" page="component://AuditReport/widget/IRISReportScreens.xml#riskRegisterSearch" />
+    <view-map name="createriskRegister" type="screen" page="component://AuditReport/widget/IRISReportScreens.xml#createriskRegister" />
+    <view-map name="viewriskRegister" type="screen" page="component://AuditReport/widget/IRISReportScreens.xml#viewriskRegister" />
+    <view-map name="RiskRegisterReport" type="screenfop" page="component://AuditReport/widget/IRISReportScreens.xml#RiskRegisterReport" content-type="application/pdf" encoding="none"/>
+    <view-map name="turtleSearch" type="screen" page="component://AuditReport/widget/IRISReportScreens.xml#turtleSearch" />
+    <view-map name="createturtleDoc" type="screen" page="component://AuditReport/widget/IRISReportScreens.xml#createturtleDoc" />
+    <view-map name="TurtleReport" type="screen" page="component://AuditReport/widget/IRISReportScreens.xml#TurtleReport"/>
+    <view-map name="ChangeMangement" type="screen" page="component://AuditReport/widget/IRISReportScreens.xml#ChangeMangementMenu" />
+    <view-map name="ControlMatrix" type="screen" page="component://AuditReport/widget/IRISReportScreens.xml#ControlMatrixSearch" />
+    <view-map name="CreateChangeMatrixDoc" type="screen" page="component://AuditReport/widget/IRISReportScreens.xml#CreateChangeMatrixDoc"/>
+    <view-map name="ViewChangeControl" type="screen" page="component://AuditReport/widget/IRISReportScreens.xml#ViewChangeControl"/>
+    <view-map name="ChangeControlReport" type="screenfop" page="component://AuditReport/widget/IRISReportScreens.xml#ChangeControlReport" content-type="application/pdf" encoding="none"/>
+
+</site-conf>

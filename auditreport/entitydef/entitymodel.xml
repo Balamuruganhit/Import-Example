@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <!-- ========================================================= -->
+    <!-- ======================== Defaults ======================= -->
+    <!-- ========================================================= -->
+    <title>Entity of AuditReport Component</title>
+    <description>None</description>
+    <copyright></copyright>
+    <version></version>
+    <entity entity-name="Question" package-name="org.apache.ofbiz.AuditReport" title="AuditReport Entity">
+        <field name="questionId" type="id"><description>primary sequenced ID</description></field>
+        <field name="question" type="long-varchar"></field>
+        <prim-key field="questionId"/>
+    </entity>
+    <entity entity-name="ReportContent" package-name="org.apache.ofbiz.AuditReport" title="AuditReport Entity">
+        <field name="genId" type="id"/>
+        <field name="reportId" type="id"/>
+        <field name="question" type="long-varchar"/>
+        <field name="rating" type="numeric"/>
+        <field name="comment" type="url"/>
+        <field name="approve" type="name"/>
+        <field name="proofBase64" type="byte-array"/> <!-- Field to store Base64-encoded string -->
+        <prim-key field="genId"/>
+    </entity>
+   <entity entity-name="partiesOrganisationHeader" package-name="org.apache.ofbiz.AuditReport" title="AuditReport Entity">
+        <field name="genId" type="id"/>
+        <field name="docId" type="id"/>
+        <field name="revision" type="id"/>
+        <field name="date" type="name"/>
+        <field name="previewDate" type="name"/>
+        <field name="approve" type="name"/>
+        <field name="previewer" type="name"/>
+        <field name="prepared" type="name"/> <!-- Field to store Base64-encoded string -->
+        <prim-key field="docId"/>
+    </entity>
+    <entity entity-name="partiesOrganisationDatas" package-name="org.apache.ofbiz.AuditReport" title="AuditReport Entity">
+        <field name="genId" type="id"/>
+        <field name="docId" type="id"/>
+        <field name="headerType" type="name"/>
+        <field name="contentDetail" type="long-varchar"/> <!-- Field to store Base64-encoded string -->
+        <prim-key field="genId"/>
+    </entity>
+    <entity entity-name="OrganisationHeader" package-name="org.apache.ofbiz.AuditReport" title="AuditReport Entity">
+        <field name="docId" type="id"/>
+        <field name="revision" type="id"/>
+        <field name="date" type="name"/>
+        <field name="approve" type="name"/>
+        <field name="previewer" type="name"/>
+        <field name="prepared" type="name"/> <!-- Field to store Base64-encoded string -->
+        <prim-key field="docId"/>
+    </entity>
+    <entity entity-name="OrganisationDatas" package-name="org.apache.ofbiz.AuditReport" title="AuditReport Entity">
+        <field name="genId" type="id"/>
+        <field name="docId" type="id"/>
+        <field name="headerType" type="name"/>
+        <field name="contentDetail" type="long-varchar"/> <!-- Field to store Base64-encoded string -->
+        <prim-key field="genId"/>
+    </entity>
+     <entity entity-name="DesignHeader" package-name="org.apache.ofbiz.AuditReport" title="AuditReport Entity">
+        <field name="docId" type="id"/>
+        <field name="revision" type="id"/>
+        <field name="date" type="name"/>
+        <field name="approve" type="name"/>
+        <field name="previewer" type="name"/>
+        <field name="prepared" type="name"/> <!-- Field to store Base64-encoded string -->
+        <prim-key field="docId"/>
+    </entity>
+     <entity entity-name="DesignDatas" package-name="org.apache.ofbiz.AuditReport" title="AuditReport Entity">
+        <field name="genId" type="id"/>
+        <field name="docId" type="id"/>
+        <field name="process" type="name"/>
+        <field name="tools" type="name"/>
+        <field name="status" type="name"/>
+        <field name="remark" type="long-varchar"/> <!-- Field to store Base64-encoded string -->
+        <prim-key field="genId"/>
+    </entity>
+    <entity entity-name="RiskHeader" package-name="org.apache.ofbiz.AuditReport" title="AuditReport Entity">
+        <field name="docId" type="id"/>
+        <field name="revision" type="id"/>
+        <field name="date" type="name"/>
+        <field name="approve" type="name"/>
+        <field name="previewer" type="name"/>
+        <field name="typeHeader" type="name"/>
+        <field name="prepared" type="name"/> <!-- Field to store Base64-encoded string -->
+        <prim-key field="docId"/>
+    </entity>
+    <entity entity-name="RiskData" package-name="org.apache.ofbiz.PanguAi" title="Fema Entity">
+        <field name="genId" type="id"/>
+        <field name="docId" type="id"/>
+        <field name="riskId" type="id"/>
+        <field name="description" type="name"/>
+        <field name="owner" type="url"/>
+        <field name="category" type="url"/>
+        <field name="dateIdentified" type="url"/>
+        <field name="hazard" type="url"/>
+        <field name="consequence" type="url"/>
+        <field name="controls" type="url"/>
+        <field name="effectiveness" type="url"/>
+        <field name="likelihood" type="numeric"/>
+        <field name="severity" type="numeric"/>
+        <field name="initialRiskRating" type="numeric"/>
+        <field name="mitigation" type="url"/>
+        <field name="actionsTaken" type="url"/>
+        <field name="residualRisk" type="url"/>
+        <field name="actiondate" type="name"/>
+        <field name="status" type="name"/> <!-- Field to store Base64-encoded string -->
+        <field name="evidence" type="url"/>
+        <field name="warrantyFrom" type="name"/>
+        <field name="warrantyTo" type="name"/>
+        <prim-key field="genId"/>
+    </entity>
+    <entity entity-name="TurtleData" package-name="org.apache.ofbiz.PanguAi" title="Fema Entity">
+        <field name="genId" type="id"/>
+        <field name="docId" type="id"/>
+        <field name="inputData" type="url"/>
+        <field name="resources" type="url"/>
+        <field name="risk" type="url"/>
+        <field name="content" type="url"/>
+        <field name="personnel" type="url"/>
+        <field name="oppurtunities" type="url"/>
+        <field name="process" type="url"/>
+        <field name="kpi" type="url"/>
+        <field name="outputData" type="url"/>
+        <field name="supplier" type="url"/>
+        <field name="customer" type="url"/>
+        <prim-key field="genId"/>
+    </entity>
+    <entity entity-name="ControlMatrix" package-name="org.apache.ofbiz.AuditReport" title="Control Matrix Entity">
+        <field name="docId" type="id"/>
+        <field name="revision" type="id"/>
+        <field name="issueNumber" type="id"/>
+        <field name="date" type="name"/>
+        <field name="approve" type="name"/>
+        <field name="previewer" type="name"/>
+        <field name="typeHeader" type="name"/>
+        <field name="prepared" type="name"/> <!-- Field to store Base64-encoded string -->
+        <prim-key field="docId"/>
+    </entity>
+    <entity entity-name="ChangeMatrixData" package-name="org.apache.ofbiz.AuditReport" title="Control Matrix Data Entity">
+       <field name="genId" type="id"/>
+        <field name="docId" type="id"/>
+        <field name="changeInitiated" type="url"/>
+        <field name="changeImpact" type="url"/>
+        <field name="methodOfInitiation" type="url"/>
+        <field name="reviewed" type="url"/>
+        <field name="approvalAuthority" type="url"/>
+        <field name="modeCommunication" type="url"/>
+        <field name="actions" type="url"/>
+        <field name="implementation" type="url"/>
+        <field name="status" type="url"/>
+        <prim-key field="genId"/>
+    </entity>
+</entitymodel>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<entity-engine-xml>
+	<Question questionId="201" question="What is the process for material planning and forecasting?	"/>
+	<Question questionId="202" question="Are work orders and PPC sheets tracked within the system for reporting purposes?	"/>
+	<Question questionId="203" question="Does the organization have an outsourcing policy in place? If so, how is it communicated to internal and external stakeholders?	"/>
+	<Question questionId="204" question="What criteria are used to select external providers for outsourcing, especially for special processes?	"/>
+	<Question questionId="205" question="How does the organization determine the products and services to be sourced from external providers?	"/>
+	<Question questionId="206" question="What process is followed to ensure that internal resource capacity is balanced with external provider capabilities? How is this process monitored and tracked?	"/>
+	<Question questionId="207" question="Is there a process for load/capacity balancing between in-house production and external providers? How is it monitored?	"/>
+	<Question questionId="208" question="Is a formal Make vs Buy analysis conducted for all major components or services that could be outsourced?	"/>
+	<Question questionId="209" question="Can you provide evidence of recent Make vs Buy analysis and decisions? How does the decision-making process incorporate risks and cost considerations?	"/>
+	<Question questionId="210" question="External Provider Determination and Control- Is there a list of approved OSPs? Can you share the most recent version?	"/>
+</entity-engine-xml>

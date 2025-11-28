@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+        Licensed to the Apache Software Foundation (ASF) under one
+        or more contributor license agreements.  See the NOTICE file
+        distributed with this work for additional information
+        regarding copyright ownership.  The ASF licenses this file
+        to you under the Apache License, Version 2.0 (the
+        "License"); you may not use this file except in compliance
+        with the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing,
+        software distributed under the License is distributed on an
+        "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+        KIND, either express or implied.  See the License for the
+        specific language governing permissions and limitations
+        under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Form" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Form http://ofbiz.apache.org/dtds/widget-form.xsd">
+
+        <form name="AddQuestion" type="single" target="CreateQuestion" title="" default-map-name="question" header-row-style="header-row" default-table-style="basic-table">
+                <field name="questionId" map-name="parameters"><hidden/></field>
+                <field name="question" title="${uiLabelMap.FormFieldTitle_Question}" required-field="true" widget-style="required"><textarea rows="2" placeholder="${uiLabelMap.FieldTitle_Question}"/></field>
+                <field name="submitButton" title="${uiLabelMap.AuditAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        </form>
+
+        <form name="AddReportDetail" target="createReportDetail" title="" type="single" enctype="multipart/form-data"
+                header-row-style="header-row" default-table-style="basic-table">
+            <field name="reportId" title="${uiLabelMap.AuditReportNo}" required-field="true"><text /></field>
+            <field name="question" position="1" title="${uiLabelMap.FormFieldTitle_Question}" required-field="true"><text/></field>
+            <field name="rating" position="1" title="${uiLabelMap.AuditReportRating}" required-field="true"><text /></field>
+            <field name="comment" position="1" title="${uiLabelMap.AuditReportComment}" required-field="true"><textarea rows="10" /></field>
+            <field name="proof" title="${uiLabelMap.AuditReportProof}"><file/></field>
+            <field name="approve" position="1" title="${uiLabelMap.AuditReportApprove}" required-field="true"><text/></field>
+             <field name="submitButton" title="${uiLabelMap.AuditAdd}" widget-style="smallSubmit">   <submit button-type="button"/>
+                 </field>
+        </form>
+         <grid name="ReportList" list-name="resultList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+                <field name="question">
+                        <hyperlink description="${question}" target="export">
+                                <parameter param-name="reportId"/>
+                        </hyperlink>     
+                </field>
+                <field name="rating" title-area-style="tableheadwide"><display description="${rating}"/></field>
+                <field name="comment" widget-style="tabletextright"><display  description="${comment}"/></field>
+                <field name="approve" widget-style="tabletextright"><display  description="${approve}"/></field>
+                <!-- <field name="proof">
+                       <display>
+                                <img src="data:image/png;base64,${proof}"/>
+                       </display>
+                </field> -->
+        </grid>
+        <form name="selectorParties" target="openParties"  default-map-name="content"
+                header-row-style="header-row" default-table-style="basic-table">
+        
+                <field name="parties" title="Select the Report No" position="1">
+                        
+                        <drop-down allow-empty="false">
+                                <option key="" description=" "/>
+                                <entity-options description="${docId} -${revision}" entity-name="partiesOrganisationHeader" key-field-name="docId" >
+                                </entity-options>
+                        </drop-down>
+                
+                </field>
+                <field name="submitButton" title="Open Doc">
+                        <submit button-type="button"/>
+                </field>
+        </form>
+        <form name="selectorOrganisation" target="openOraganisationReport"  default-map-name="content"
+                header-row-style="header-row" default-table-style="basic-table">
+                <field name="organisation" title="Select the Report No" position="1">
+                        <drop-down allow-empty="false">
+                                <option key="" description=" "/>
+                                <entity-options description="${docId} -${revision}" entity-name="OrganisationHeader" key-field-name="docId" >
+                                </entity-options>
+                        </drop-down>
+                </field>
+                <field name="submitButton" title="Open Doc">
+                        <submit button-type="button"/>
+                </field>
+        </form>
+        <form name="resultclause8" type="list" use-row-submit="true" target=""  title="" list-name="ramsList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="">
+            <field name="docId" widget-style="buttontext">
+                <hyperlink description="${docId}" target="createDesignDevelopment">
+                    <parameter param-name="docId"/>
+                     <parameter param-name="printdoc" value="done"/>
+
+                </hyperlink>  
+            </field>
+            <field name="revision"><display/>
+            </field>
+            <field name="date"><display/></field>
+            <field name="approve"><display/></field>
+            <field name="previewer"><display/></field>
+            <field name="prepared"><display/></field>
+            <field name="updateLink"  widget-style="buttontext">
+                <hyperlink description="create" target="createDesignDevelopment" >
+                        <parameter param-name="docId"/>
+                        <parameter param-name="create" value="done"/>
+                </hyperlink>
+            </field>
+    </form>
+    <form name="findclause8" target="classEight" title="" type="single" 
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="docId" title="Document Number" position="1" ><text/></field>
+        <field name="revision" position="2"><text></text></field>
+        <field name="approve" position="1"><text></text></field>
+        <field name="previewer" position="2"><text></text></field>
+        <field name="prepared" position="1"><text></text></field>
+        <field name="date" position="2"><date-find  type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <field name="approver" ><hidden value="update"/></field>
+    </form>
+     <form name="kpiDecider" target="ProductionAndActual" title="" type="single" 
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="productId" position="1" title="Part Number">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="plan" ><hidden value="update"/></field>
+        <field name="date" title="Enter the between date" position="1" ><date-find  type="date" /></field>
+        <field name="submitButton" title=""><submit/></field>
+       
+    </form>
+    <form name="kpiotdDecider" target="otdCreator" title="" type="single" 
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="date" title="Enter the between date" position="1" ><date-find  type="date" /></field>
+        <field name="submitButton" title=""><submit/></field>
+        <field name="ontime" ><hidden value="update"/></field>
+    </form>
+    <form name="resultRisk" type="list" use-row-submit="true" target=""  title="" list-name="ramsList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="">
+            <field name="docId" widget-style="buttontext">
+                <hyperlink description="${docId}" target="viewriskRegister">
+                    <parameter param-name="docId"/>
+                     <parameter param-name="printdoc" value="done"/>
+
+                </hyperlink>  
+            </field>
+            <field name="revision"><display/>
+            </field>
+            <field name="date"><display/></field>
+            <field name="approve"><display/></field>
+            <field name="previewer"><display/></field>
+            <field name="prepared"><display/></field>
+            <field name="updateLink"  widget-style="buttontext">
+                <hyperlink description="create" target="createriskRegister" >
+                        <parameter param-name="docId"/>
+                        <parameter param-name="create" value="done"/>
+                </hyperlink>
+            </field>
+    </form>
+    <form name="findRisk" target="riskRegisterSearch" title="" type="single" 
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="docId" title="Document Number" position="1" ><text/></field>
+        <field name="revision" position="2"><text></text></field>
+        <field name="approve" position="1"><text></text></field>
+        <field name="previewer" position="2"><text></text></field>
+        <field name="prepared" position="1"><text></text></field>
+        <field name="date" position="2"><date-find  type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <field name="approver" ><hidden value="update"/></field>
+        <field name="typer" ><hidden value="IRIS"/></field>
+    </form>
+    <form name="resultturtle" type="list" use-row-submit="true" target=""  title="" list-name="ramsList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="">
+            <field name="docId" widget-style="buttontext">
+                <hyperlink description="${docId}" target="TurtleReport">
+                    <parameter param-name="docId"/>
+                     <parameter param-name="turtle" value="done"/>
+
+                </hyperlink>  
+            </field>
+            <field name="revision"><display/>
+            </field>
+            <field name="date"><display/></field>
+            <field name="approve"><display/></field>
+            <field name="previewer"><display/></field>
+            <field name="prepared"><display/></field>
+            <!-- <field name="updateLink"  widget-style="buttontext">
+                <hyperlink description="create" target="createriskRegister" >
+                        <parameter param-name="docId"/>
+                        <parameter param-name="create" value="done"/>
+                </hyperlink>
+            </field> -->
+    </form>
+    <form name="findturtle" target="turtleSearch" title="" type="single" 
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="docId" title="Document Number" position="1" ><text/></field>
+        <field name="revision" position="2"><text></text></field>
+        <field name="approve" position="1"><text></text></field>
+        <field name="previewer" position="2"><text></text></field>
+        <field name="prepared" position="1"><text></text></field>
+        <field name="date" position="2"><date-find  type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <field name="approver" ><hidden value="update"/></field>
+        <field name="typer" ><hidden value="TURTLE"/></field>
+
+    </form>
+    <form name="resultchangecontrol" type="list" use-row-submit="true" target=""  title="" list-name="ramsList"
+        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="">
+            <field name="docId" widget-style="buttontext">
+                <hyperlink description="${docId}" target="ViewChangeControl">
+                    <parameter param-name="docId"/>
+                     <parameter param-name="printdoc" value="done"/>
+
+                </hyperlink>  
+            </field>
+            <field name="revision"><display/>
+            </field>
+            <field name="issueNumber"><display/></field>
+            <field name="date"><display/></field>
+            <field name="approve"><display/></field>
+            <field name="previewer"><display/></field>
+            <field name="prepared"><display/></field>
+            <field name="updateLink"  widget-style="buttontext">
+                <hyperlink description="create" target="CreateChangeMatrixDoc" >
+                        <parameter param-name="docId"/>
+                        <parameter param-name="create" value="done"/>
+                </hyperlink>
+            </field>
+    </form>
+    <form name="findchangecontrol" target="ControlMatrix" title="" type="single" 
+        header-row-style="header-row" default-table-style="basic-table">
+        <field name="docId" title="Document Number" position="1" ><text/></field>
+        <field name="revision" position="2"><text></text></field>
+        <field name="approve" position="1"><text></text></field>
+        <field name="previewer" position="2"><text></text></field>
+        <field name="prepared" position="1"><text></text></field>
+        <field name="date" position="2"><date-find  type="date"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <field name="approver" ><hidden value="update"/></field>
+        <field name="typer" ><hidden value="CONTROLMATRIX"/></field>
+
+    </form>
+
+</forms>

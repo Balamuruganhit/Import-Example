@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
+    <description>AuditReport Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <service name="noSyntaxError" engine="interface">
+        <description>
+            Dummy service to prevent empty files and syntax error - Remove when the 1st real service will be added here 
+        </description>
+    </service> 
+    <service name="interfaceQuestion" default-entity-name="Question" engine="interface" location="" invoke="">
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedDate"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
+        <override name="description" allow-html="safe"/>
+        <override name="longDescription" allow-html="safe"/>
+    </service>
+     <service name="auditPermissionService" engine="simple"
+             location="component://common/minilang/permission/CommonPermissionServices.xml" invoke="genericBasePermissionCheck">
+        <implements service="permissionInterface"/>
+        <attribute name="primaryPermission" type="String" mode="IN" optional="true" default-value="AUDITREPORT"/>
+        <attribute name="altPermission" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createdQuestion" default-entity-name="Question" engine="entity-auto" invoke="create" auth="true">
+        <description>Create a question</description>
+        <permission-service service-name="auditPermissionService" main-action="CREATE"/>
+         <attribute name="question" type="String" mode="IN"/>
+    </service>
+     <service name="createQuestion" default-entity-name="Question" engine="groovy"
+                location="component://AuditReport/groovyScripts/Audit/QuestionService.groovy" invoke="createQuestion" auth="true">
+        <description>Create a question</description>
+        <implements service="interfaceProduct"/>
+       <auto-attributes include="pk" mode="INOUT" optional="true"/>
+       <auto-attributes include="nonpk" mode="INOUT" optional="true"/>
+    </service>
+    <service name="createReportDetail"
+         engine="groovy"
+         location="component://AuditReport/groovyScripts/Audit/QuestionService.groovy"
+         invoke="createReportDetail"
+         auth="true">
+        <!-- <attribute name="reportId" type="Integer" mode="IN"/>
+        <attribute name="question" type="String" mode="IN"/>
+        <attribute name="rating" type="Integer" mode="IN"/>
+        <attribute name="comment" type="String" mode="IN"/>
+        <attribute name="approve" type="String" mode="IN"/>
+        <attribute name="proof" type="java.nio.ByteBuffer" mode="IN"/> -->
+         <attribute name="reportDetails" type="java.util.List" mode="IN"/>
+    </service>
+    <service name="createPartiesReport"
+        engine="groovy"
+        location="component://AuditReport/groovyScripts/Audit/isoReport/partiesreport.groovy"
+        invoke="createPartiesReport"
+        auth="true">
+        <attribute name="partiesDetail" type="java.util.List" mode="IN"/>   
+    </service>
+    <service name="createOrganisationReport"
+        engine="groovy"
+        location="component://AuditReport/groovyScripts/Audit/isoReport/organisationreport.groovy"
+        invoke="createOrganisationReport"
+        auth="true">
+        <attribute name="OrganisationDetail" type="java.util.List" mode="IN"/>   
+    </service>
+    <service name="findReport"
+        engine="groovy"
+        location="component://AuditReport/groovyScripts/Audit/isoReport/findReport.groovy"
+        invoke="createOrganisationReport"
+        auth="true">
+        <attribute name="OrganisationDetail" type="java.util.List" mode="IN"/>   
+    </service>
+    <service name="createDesignReport"
+        engine="groovy"
+        location="component://AuditReport/groovyScripts/Audit/isoReport/clause8.groovy"
+        invoke="createDesignReport"
+        auth="true">
+        <attribute name="designsDetail" type="java.util.List" mode="IN"/>   
+    </service>
+    <service name="createConfigurationManagementReport"
+        engine="groovy"
+        location="component://AuditReport/groovyScripts/Audit/isoReport/clause8.groovy"
+        invoke="createPartiesReport"
+        auth="true">
+        <attribute name="managementDetail" type="java.util.List" mode="IN"/>   
+    </service>
+    <service name="createRequirementReport"
+        engine="groovy"
+        location="component://AuditReport/groovyScripts/Audit/isoReport/clause8.groovy"
+        invoke="createRequirementReport"
+        auth="true">
+        <attribute name="requirementDetail" type="java.util.List" mode="IN"/>   
+    </service>
+    <service name="createRiskRegister"
+        engine="groovy"
+        location="component://AuditReport/groovyScripts/Audit/IRIS/riskregister.groovy"
+        invoke="createRiskRegister"
+        auth="true">
+        <attribute name="riskRegister" type="java.util.List" mode="IN"/>   
+    </service>
+    <service name="createTurtleDoc"
+        engine="groovy"
+        location="component://AuditReport/groovyScripts/Audit/IRIS/riskregister.groovy"
+        invoke="createTurtleDoc"
+        auth="true">
+        <attribute name="TurtleDetails" type="java.util.List" mode="IN"/> 
+         <attribute mode="OUT" name="docId" optional="false" type="Long"/>  
+    </service>
+    
+<service name="FetchQuantityProducedPaged"
+         engine="groovy"
+         location="component://AuditReport/groovyScripts/Audit/AuditServices.groovy"
+         invoke="FetchQuantityProducedPaged"
+         auth="true">
+    <attribute name="page" mode="IN" type="String"/>
+    <attribute name="limit" mode="IN" type="String"/>
+    <attribute name="labels" mode="OUT" type="List"/>
+    <attribute name="planned" mode="OUT" type="List"/>
+    <attribute name="actual" mode="OUT" type="List"/>
+    <attribute name="totalPages" mode="OUT" type="Integer"/>
+</service>
+
+</services>

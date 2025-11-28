@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://ofbiz.apache.org/Widget-Menu" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Menu http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    <menu name="MainAppBar" title="${uiLabelMap.AuditReportApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+
+        <menu-item name="MainMenu" title="Main Menu"><link target="/DemoPage/control/IsoMenu" url-mode="inter-app"/></menu-item>
+        <menu-item name="AuditAs9100" title="${uiLabelMap.AuditAs9100}"><link target="As9100Land"/></menu-item>
+       
+    </menu>
+    <menu name="AuditIRISMainAppBar" title="${uiLabelMap.AuditReportApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+
+        <menu-item name="MainMenu" title="Main Menu"><link target="/DemoPage/control/IsoMenu" url-mode="inter-app"/></menu-item>
+        <menu-item name="AuditIRIS" title="${uiLabelMap.AuditIRIS}"><link target="irismenu"/></menu-item>
+       
+    </menu>
+    <menu name="KPIMainAppBar" title="${uiLabelMap.AuditReportApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+
+        <menu-item name="MainMenu" title="Main Menu"><link target="/DemoPage/control/IsoMenu" url-mode="inter-app"/></menu-item>
+       
+        <menu-item name="KPI" title="${uiLabelMap.Kpi}"><link target="kpi"/></menu-item>
+    </menu>
+    <menu name="AuditIso9001MainAppBar" title="${uiLabelMap.AuditReportApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+
+        <menu-item name="MainMenu" title="Main Menu"><link target="/DemoPage/control/IsoMenu" url-mode="inter-app"/></menu-item>
+        
+        <menu-item name="AuditIso9001" title="${uiLabelMap.AuditIso9001}"><link target="ListOfReport"/></menu-item>
+       
+    </menu>
+    <menu name="AuditAS9100Bar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <!-- <menu-item name="createConfig" title="${uiLabelMap.AuditConfig}" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="config"/>
+        </menu-item>
+        <menu-item name="createPickReview" title="${uiLabelMap.AuditPickReview}" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="pickReview"/>
+        </menu-item>
+        <menu-item name="AuditExport" title="${uiLabelMap.AuditExport}" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item> -->
+        <menu-item name="IrisClauses" title="AS 9100 Clauses" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="riskRegister" title="Risk Register" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="riskRegisterSearch"/>
+        </menu-item>
+        
+        <menu-item name="kpiIris" title="KPI" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="changeMangement" title="Change Management" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="ChangeMangement"/>
+        </menu-item>
+        <menu-item name="internalAuditormatrix" title="Internal Auditor Competence Matrix" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="internalAuditorSchedule" title="Internal Auditor Schedule" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="AuditIso9001Bar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="scope" title="Clause1: Scope" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="config"/>
+        </menu-item>
+        <menu-item name="normativeReference" title="Clause2: Normative Reference" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="pickReview"/>
+        </menu-item>
+        <menu-item name="terms" title="Clause3: Terms and Definitions" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="context" title="Clause4: Context of the organization" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="classFour"/>
+        </menu-item>
+        <menu-item name="leaderShip" title="Clause5: Leadership" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="classFive"/>
+        </menu-item>
+        <menu-item name="planing" title="Clause6: Planning" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="classSix"/>
+        </menu-item>
+        <menu-item name="support" title="Clause7: Support" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="classSeven"/>
+        </menu-item>
+        <menu-item name="operation" title="Clause8: Operation" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="classEight"/>
+        </menu-item>
+        <menu-item name="performance" title="Clause9: Performance and Evalution" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="classNine"/>
+        </menu-item>
+        <menu-item name="improvement" title="Clause10: Improvement" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="classTen"/>
+        </menu-item>
+    </menu>
+    <menu name="contextBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="organization" title="4.1 Understanding the organization and its context" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="parties" title="4.2 Understanding the needs and expectations of interested parties" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="parties"/>
+        </menu-item>
+        <menu-item name="quality" title="4.3 Determining the scope of the quality management system" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="management" title="4.4 Quality management system and its processes" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="leadershipBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="leader" title="5.1 Leadership and Commitment" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="policy" title="5.2 Policy" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="parties"/>
+        </menu-item>
+        <menu-item name="roles" title="5.3 Organisational Roles, Responsibilities and Authorities" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="planningBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="risk" title="6.1 Actions to addres risk and opportunity" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="quality" title="6.2 Quality objectives and planning to achieve" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="parties"/>
+        </menu-item>
+        <menu-item name="planningCharges" title="6.3 Planning of charges" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="supportBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="resources" title="7.1 Resources" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="competence" title="7.2 Competence" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="parties"/>
+        </menu-item>
+        <menu-item name="awareness" title="7.3 Awareness" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="communication" title="7.4 Communication" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="OperationBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="planningOperational" title="8.1 Operational planning and control" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="requirementservices" title="8.2 Requirements for products and services" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="parties"/>
+        </menu-item>
+        <menu-item name="designDevelopment" title="8.3 Design and Development of product and services" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="createDesignDevelopment"/>
+        </menu-item>
+        <menu-item name="controlExternal" title="8.4 Control of externally provided product and services" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="production" title="8.5 Production and service provision" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="release" title="8.6 Release of products and services" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="nonconforming" title="8.7 Control of nonconforming process outputs" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="leadershipBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="leader" title="5.1 Leadership and Commitment" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="policy" title="5.2 Policy" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="parties"/>
+        </menu-item>
+        <menu-item name="roles" title="5.3 Organisational Roles, Responsibilities and Authorities" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="KpiBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="CustomerOTPPerformance" title="${uiLabelMap.performance}" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="OtdRangeSetter"/>
+        </menu-item>
+        <menu-item name="TypicalRFQ" title="${uiLabelMap.TypicalRFQ}" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="pickReview"/>
+        </menu-item>
+        <menu-item name="FAI" title="${uiLabelMap.FAI}" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="ECI" title="${uiLabelMap.ECI}" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="CostBreakUp" title="${uiLabelMap.CostBreakUp}" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="ProductionActual" title="${uiLabelMap.ProductionActual}" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="ProductionPlan"/>
+        </menu-item>
+        
+    </menu>
+    <menu name="performanceBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="monitor" title="9.1 Monitoring, Meaurement, Analysis and Evalution" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="internalAudit" title="9.2 Internal Audit" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="parties"/>
+        </menu-item>
+        <menu-item name="reviewManagement" title="9.3 Management Review" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="improvementBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="general" title="10.1 General" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="corrective" title="10.2 Nonconformity and corrective action" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="parties"/>
+        </menu-item>
+        <menu-item name="continual" title="10.3 Continual Improvement" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="DeterminationBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="customercommunication" title="8.2.1 Customer Communication" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="requirementRelated" title="8.2.2 Determination of Reuirements related to products and services" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="parties"/>
+        </menu-item>
+        <menu-item name="reviewRequirement" title="8.2.3 Review of requirements related to products and services" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="DesignBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="generalPlaning" title="8.3.1 general" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="DesignPlaning" title="8.3.2 Design and development planning" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="parties"/>
+        </menu-item>
+        <menu-item name="designInput" title="8.3.3 Design and development inputs" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="designcontrol" title="8.3.4 Design and development Controls" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="designOutputs" title="8.3.5 Design and development outputs" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="designChanges" title="8.3.6 Design and development changes" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="controlBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="generalControl" title="8.4.1  General" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="typeExtend" title="8.4.2 Type and extend of control of external provision" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="parties"/>
+        </menu-item>
+        <menu-item name="information" title="8.4.3 Information for external providers" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="IrisBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="IrisClauses" title="IRIS Clauses" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="organisation"/>
+        </menu-item>
+        <menu-item name="riskRegister" title="Risk Register" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="riskRegisterSearch"/>
+        </menu-item>
+        <menu-item name="turtleDiagram" title="Turtle Diagram" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="turtleSearch"/>
+        </menu-item>
+        <menu-item name="kpiIris" title="KPI" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="changeMangement" title="Change Management" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="ChangeMangement"/>
+        </menu-item>
+        <menu-item name="internalAuditormatrix" title="Internal Auditor Competence Matrix" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+        <menu-item name="internalAuditorSchedule" title="Internal Auditor Schedule" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+    <menu name="changeManagementExtendBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          menu-container-style="button-bar button-style-2">
+        <menu-item name="changeControl" title="Change Control Matrix" >
+            <condition>
+                 <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="ControlMatrix"/>
+        </menu-item>
+        <menu-item name="typeExtend" title="8.4.2 Type and extend of control of external provision" >
+            <condition>
+                <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="parties"/>
+        </menu-item>
+        <menu-item name="information" title="8.4.3 Information for external providers" >
+            <condition>
+                     <if-has-permission permission="AUDITREPORT" action="_CREATE"/>
+            </condition>
+            <link target="AuditExport"/>
+        </menu-item>
+    </menu>
+</menus>
