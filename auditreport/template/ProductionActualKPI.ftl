@@ -9,6 +9,7 @@
     <button class="topbar-btn" data-target="shipmentChartDiv">Scheduled vs Delivery</button>
     <button class="topbar-btn" data-target="complaintChartDiv">Customer Complaints</button>
     <button class="topbar-btn" data-target="invoiceChartDiv">Total Sales Invoice Received Monthly</button>
+    <button class="topbar-btn" data-target="qohChartDiv">Monthly Quantity On Hand</button>
 </div>
 
 <!-- =============================
@@ -833,7 +834,103 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 </div>
+<div id="qohChartDiv"><#-- Call the service -->
+<#assign serviceResult = dispatcher.runSync("MonthlyQuantityOnHand", {}) />
+<#assign monthlyList = serviceResult.monthlyQohList?default([]) />
 
+<div class="card" style="padding: 20px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin: 20px;">
+    <h3 style="text-align:center; margin-bottom:20px;">Monthly Book Stock</h3>
+
+    <!-- Year Filter Dropdown -->
+    <div style="text-align:center; margin-bottom:20px;">
+        <label for="yearFilter" style="margin-right:10px;">Select Year:</label>
+        <select id="yearFilter" style="padding:5px 10px; border-radius:5px; border:1px solid #ccc;">
+            <#-- Collect unique years manually -->
+            <#assign yearMap = {}> 
+            <#list monthlyList as data>
+                <#assign yearMap = yearMap + { (data.year) : 1 }>
+            </#list>
+            <#list yearMap?keys as yr>
+                <option value="${yr}">${yr}</option>
+            </#list>
+        </select>
+    </div>
+
+    <canvas id="monthlyQohChart" style="width:100%; height:400px;"></canvas>
+
+    <#if monthlyList?size == 0>
+        <p style="text-align:center; color:#777;">No records found.</p>
+    </#if>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    const fixedMonths = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+    // Organize data by year → month
+    const yearDataMap = {};
+    <#list monthlyList as data>
+        if (!yearDataMap[${data.year}]) yearDataMap[${data.year}] = {};
+        yearDataMap[${data.year}]["${data.month?trim}"] = ${data.totalQuantity};
+    </#list>
+
+    // Function to get chart data for a year
+    function getChartData(year) {
+        const monthMap = yearDataMap[year] || {};
+        return fixedMonths.map(m => monthMap[m] ?? 0);
+    }
+
+    const ctx = document.getElementById('monthlyQohChart').getContext('2d');
+
+    const backgroundColors = [
+        'rgba(255, 99, 132, 0.8)','rgba(54, 162, 235, 0.8)','rgba(255, 206, 86, 0.8)',
+        'rgba(75, 192, 192, 0.8)','rgba(153, 102, 255, 0.8)','rgba(255, 159, 64, 0.8)',
+        'rgba(0, 204, 102, 0.8)','rgba(255, 102, 255, 0.8)','rgba(102, 255, 102, 0.8)',
+        'rgba(102, 153, 255, 0.8)','rgba(255, 102, 102, 0.8)','rgba(255, 204, 102, 0.8)'
+    ];
+    const borderColors = backgroundColors.map(c => c.replace("0.8", "1"));
+
+    // Initialize chart with current year
+    const yearSelect = document.getElementById('yearFilter');
+    const currentYear = new Date().getFullYear();
+    if (yearDataMap[currentYear]) {
+        yearSelect.value = currentYear; // Set dropdown to current year
+    }
+
+    let chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: fixedMonths,
+            datasets: [{
+                label: 'Total Quantity',
+                data: getChartData(yearSelect.value),
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 2,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // Update chart on year change
+    yearSelect.addEventListener('change', function() {
+        const newData = getChartData(this.value);
+        chart.data.datasets[0].data = newData;
+        chart.update();
+    });
+
+});
+</script>
+
+</div>
 </div>
 
 <!-- =============================
@@ -902,3 +999,4 @@ document.addEventListener("DOMContentLoaded", () => {
     box-shadow: 0 8px 20px rgba(0, 74, 173, 0.35);
 }
 </style>
+

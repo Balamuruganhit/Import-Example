@@ -496,4 +496,15 @@ under the License.
     <attribute name="monthlyInvoiceList" type="List" mode="OUT" optional="true"/>
 </service>
 
+<service name="MonthlyQuantityOnHand"
+         engine="groovy"
+         auth="false"
+         export="true"
+         action="GET"
+         location="component://example/src/main/groovy/org/apache/ofbiz/example/InventoryServices.groovy"
+         invoke="monthlyQuantityOnHand">
+    <description>Fetch total Quantity On Hand grouped by month based on Last Updated Stamp</description>
+    <attribute name="monthlyQohList" type="List" mode="OUT" optional="true"/>
+</service>
+
 </services>

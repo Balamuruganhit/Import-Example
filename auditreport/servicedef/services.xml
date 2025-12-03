@@ -127,17 +127,5 @@
          <attribute mode="OUT" name="docId" optional="false" type="Long"/>  
     </service>
     
-<service name="FetchQuantityProducedPaged"
-         engine="groovy"
-         location="component://AuditReport/groovyScripts/Audit/AuditServices.groovy"
-         invoke="FetchQuantityProducedPaged"
-         auth="true">
-    <attribute name="page" mode="IN" type="String"/>
-    <attribute name="limit" mode="IN" type="String"/>
-    <attribute name="labels" mode="OUT" type="List"/>
-    <attribute name="planned" mode="OUT" type="List"/>
-    <attribute name="actual" mode="OUT" type="List"/>
-    <attribute name="totalPages" mode="OUT" type="Integer"/>
-</service>
 
 </services>
